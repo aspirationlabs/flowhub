@@ -1,0 +1,10 @@
+repos:
+  - repo: local
+    hooks:
+      - id: typescript-checks
+        name: TypeScript checks (tsc, eslint, prettier)
+        entry: node typescript/scripts/tscheck.js
+        language: system
+        files: .*\.(ts|tsx|js|jsx)$
+        exclude: (\.next|node_modules)/.*
+        pass_filenames: true
