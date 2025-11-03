@@ -4,6 +4,7 @@
     "module": "NodeNext",
     "lib": ["ES2023", "DOM"],
     "moduleResolution": "NodeNext",
+    "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -11,7 +12,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest", "chrome"]
   },
   "include": ["typescript/**/*.ts", "typescript/**/*.tsx"]
 }

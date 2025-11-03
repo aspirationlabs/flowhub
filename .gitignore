@@ -3,3 +3,8 @@
 .env.local
 
 node_modules/*
+
+.claude/settings.local.json
+dist/
+playwright-report/
+test-results/
