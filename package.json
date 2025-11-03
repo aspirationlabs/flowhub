@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.20.0",
   "type": "commonjs",
   "scripts": {
-    "lint": "eslint \"typescript/**/*.{ts,tsx}\"",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "format": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "test": "jest",
@@ -12,7 +12,7 @@
     "build": "echo \"Next.js build placeholder\""
   },
   "devDependencies": {
-    "@types/jest": "30.0.0",
+    "@types/jest": "29.5.12",
     "@types/node": "24.9.2",
     "@typescript-eslint/eslint-plugin": "8.46.2",
     "@typescript-eslint/parser": "8.46.2",
