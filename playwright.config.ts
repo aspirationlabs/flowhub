@@ -61,8 +61,17 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         launchOptions: {
           args: [
-            `--disable-extensions-except=${ensuredExtensionPath}`,
-            `--load-extension=${ensuredExtensionPath}`,
+            ...(process.env.SKIP_EXTENSION
+              ? []
+              : [
+                  `--disable-extensions-except=${ensuredExtensionPath}`,
+                  `--load-extension=${ensuredExtensionPath}`,
+                ]),
+            '--disable-gpu',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-blink-features=AutomationControlled',
           ],
         },
       },
