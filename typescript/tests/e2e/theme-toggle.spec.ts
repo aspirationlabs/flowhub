@@ -55,15 +55,10 @@ test.describe('Theme Toggle E2E', () => {
     expect(storedTheme).toBe('dark');
 
     const secondPage = await context.newPage();
-<<<<<<< HEAD
     await secondPage.goto('/', { waitUntil: 'domcontentloaded' });
-    await secondPage.waitForFunction(() => document.documentElement.classList.contains('dark'));
-=======
-    await secondPage.goto('/', { waitUntil: 'networkidle' });
     await secondPage.waitForFunction(() =>
       document.documentElement.classList.contains('dark'),
     );
->>>>>>> 1f5d554 (Run prettier over everything)
 
     const toggleToLight = secondPage.getByRole('button', {
       name: /switch to light mode/i,
