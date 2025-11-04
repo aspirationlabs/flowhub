@@ -1,12 +1,14 @@
 # Flowhub Agent Brief
 
 ## Mission & Scope
+
 - Deliver a serverless, TypeScript-driven dashboard that surfaces per-connector usage and an aggregated summary for a user's daily activity.
 - Start as a browser new-tab experience powered by Next.js (App Router), Shadcn UI, and pnpm-managed dependencies. Try to piece together all components using Shadcn components.
 - Support Anthropic, OpenAI, and OpenRouter connectors with extensible abstractions for credentials, data fetching, caching, and presentation.
 - Prepare for future polyglot expansion (e.g., Python backend services) without restructuring the existing TypeScript code.
 
 ## Guiding Principles
+
 - **Separation of concerns:** keep connector domain logic, storage adapters, and UI layers decoupled to enable future backend rewrites.
 - **Composable connectors:** each connector owns its API client, schema validation, and transformation pipeline, but plugs into shared registries and UI shells.
 - **Swappable storage:** key and cache storage live behind interfaces so session storage can be replaced with encrypted or remote storage later.
@@ -15,12 +17,14 @@
 - **Explicit modules:** prefer relative imports for internal code and avoid wildcard re-exports; expose named members directly.
 
 ## Code Style Expectations
+
 - Target modern runtimes (ES2023, Node 20+) with `moduleResolution` set to `NodeNext`.
 - Keep imports relative to the consuming module unless a shared alias is deliberately introduced.
 - Export named functions, types, or objects; avoid `export *` barrels.
 - Follow ESLint + Prettier defaults (single quotes, trailing commas) and rely on strict TypeScript checking.
 
 ## Repository Structure (TypeScript Domain)
+
 ```
 flowhub/
 ├─ typescript/
@@ -100,6 +104,7 @@ flowhub/
 ```
 
 ## Key Modules & Responsibilities
+
 - **`typescript/app/layout.tsx`** – wraps every route, injects global CSS, and wires top-level providers.
 - **`typescript/app/page.tsx`** – server component that selects dashboard state and renders the client shell.
 - **`typescript/app/components/widgets/*`** – Shadcn-based widgets (time, summaries, charts) that populate the dashboard grid.
@@ -122,6 +127,7 @@ flowhub/
 - **`typescript/scripts/*`** – developer tooling for connector scaffolding, icon generation, and extension export.
 
 ## Tooling & Validation
+
 - **Package management:** pnpm with pinned version (`packageManager` field) and committed `pnpm-lock.yaml`.
 - **Static analysis:** ESLint (`pnpm lint`), Prettier, optional Stylelint if CSS emerges.
 - **Typing:** `pnpm typecheck` (strict TypeScript, `tsc --noEmit`).
@@ -139,6 +145,7 @@ flowhub/
 - **Pre-commit workflow:** lint-staged (ESLint, Prettier, optional focused Jest runs). Commit hooks may be added later via preferred tooling (e.g., lefthook or npm scripts; `.husky/` intentionally omitted).
 
 ## Operational Playbooks
+
 - **Adding a connector:**
   1. Run `pnpm ts-node typescript/scripts/generate-connector.ts <name>`.
   2. Implement `client.ts`, `schema.ts`, `transformers.ts`, and connector UI components.
@@ -154,6 +161,7 @@ flowhub/
   - Dashboard consumes DTOs via hooks/state store, enabling filtering and aggregation.
 
 ## Future Considerations
+
 - **Backend evolution:** `python/api/` placeholder indicates eventual migration of connector clients to server-side services without touching TypeScript UI.
 - **Security:** plan for encrypting keys at rest, secrets rotation, and possibly multi-user key storage once remote storage is introduced.
 - **Caching strategy:** explore revalidation tags, IndexedDB, or remote KV if session storage proves insufficient.
@@ -161,6 +169,7 @@ flowhub/
 - **Analytics & telemetry:** hook shared logging utilities into connector clients for error/latency tracking.
 
 ## Key Design Benefits
+
 - **Serverless-ready:** client-first architecture with local/session storage and Next.js route handlers requires no dedicated backend.
 - **Future-proof:** explicit `typescript/` domain keeps frontend isolated, easing later backend extraction (e.g., `python/api`).
 - **Scalable connectors:** registry-driven pattern makes adding new providers straightforward without touching core UI.
@@ -169,6 +178,7 @@ flowhub/
 - **Developer-friendly:** generator scripts, consistent validation commands, and documented patterns accelerate onboarding.
 
 ## Open Questions
+
 - What TTLs and eviction strategies should caching use per connector?
 - Should we adopt Conventional Commits or another commit policy before automation is added?
 - How should connector errors surface in the summary (silent fail vs. degraded UI)?

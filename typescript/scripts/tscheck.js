@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { spawnSync } = require('node:child_process');
+import { spawnSync } from 'node:child_process';
 
 const files = process.argv.slice(2);
 
@@ -22,13 +22,13 @@ const lintTargets = unique(files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file
 run('pnpm', ['run', 'typecheck'], 'TypeScript typecheck');
 
 if (lintTargets.length > 0) {
-  run('pnpm', ['exec', 'eslint', ...lintTargets], 'ESLint');
+  run('pnpm', ['exec', 'eslint', ...lintTargets, '--no-warn-ignored'], 'ESLint');
 } else {
   console.log('No files to lint.');
 }
 
 if (files.length > 0) {
-  run('pnpm', ['exec', 'prettier', '--check', ...unique(files)], 'Prettier');
+  run('pnpm', ['exec', 'prettier', '--check', ...unique(files), '--write'], 'Prettier');
 } else {
   console.log('No files to format.');
 }

@@ -7,14 +7,18 @@ describe('ThemeToggle', () => {
     const mockToggleTheme = jest.fn();
     render(<ThemeToggle theme="light" onToggle={mockToggleTheme} />);
 
-    expect(screen.getByRole('button', { name: /switch to dark mode/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /switch to dark mode/i }),
+    ).toBeInTheDocument();
   });
 
   it('should display "Dark" when theme is dark', () => {
     const mockToggleTheme = jest.fn();
     render(<ThemeToggle theme="dark" onToggle={mockToggleTheme} />);
 
-    expect(screen.getByRole('button', { name: /switch to light mode/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /switch to light mode/i }),
+    ).toBeInTheDocument();
   });
 
   it('should call onToggle when button is clicked', () => {
@@ -29,7 +33,9 @@ describe('ThemeToggle', () => {
 
   it('should be positioned in top-right corner', () => {
     const mockToggleTheme = jest.fn();
-    const { container } = render(<ThemeToggle theme="light" onToggle={mockToggleTheme} />);
+    const { container } = render(
+      <ThemeToggle theme="light" onToggle={mockToggleTheme} />,
+    );
 
     const button = container.querySelector('button');
     expect(button).toHaveClass('fixed', 'right-6', 'top-6');

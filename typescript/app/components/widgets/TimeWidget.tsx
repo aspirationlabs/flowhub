@@ -15,14 +15,19 @@ export function TimeWidget() {
 
   const formattedTime = formatter
     .formatToParts(currentTime)
-    .filter(({ type, value }) => type !== 'dayPeriod' && (type !== 'literal' || value.trim() !== ''))
+    .filter(
+      ({ type, value }) =>
+        type !== 'dayPeriod' && (type !== 'literal' || value.trim() !== ''),
+    )
     .map(({ value }) => value)
     .join('');
 
   return (
     <Card className="w-full bg-background/70" data-testid="time-widget">
       <CardContent className="flex items-center justify-center py-12">
-        <span className="text-8xl font-semibold tracking-tight sm:text-9xl">{formattedTime}</span>
+        <span className="text-8xl font-semibold tracking-tight sm:text-9xl">
+          {formattedTime}
+        </span>
       </CardContent>
     </Card>
   );

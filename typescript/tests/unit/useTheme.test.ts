@@ -60,7 +60,10 @@ describe('useTheme', () => {
   });
 
   it('should load stored theme preference', async () => {
-    window.localStorage.setItem(SYSTEM_PREFERENCES_KEY, JSON.stringify({ theme: 'dark' }));
+    window.localStorage.setItem(
+      SYSTEM_PREFERENCES_KEY,
+      JSON.stringify({ theme: 'dark' }),
+    );
 
     const { result } = renderHook(() => useTheme());
 
@@ -87,7 +90,9 @@ describe('useTheme', () => {
     });
 
     expect(result.current.theme).toBe('dark');
-    expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(JSON.stringify({ theme: 'dark' }));
+    expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(
+      JSON.stringify({ theme: 'dark' }),
+    );
     expect(document.documentElement.classList.contains('dark')).toBe(true);
   });
 

@@ -4,10 +4,15 @@ import { SYSTEM_PREFERENCES_KEY } from '@/app/components/providers/systemPrefere
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Theme Toggle E2E', () => {
-  test('should display light mode by default and toggle to dark mode', async ({ page }) => {
+  test('should display light mode by default and toggle to dark mode', async ({
+    context,
+  }) => {
+    const page = await context.newPage();
     await page.goto('/', { waitUntil: 'domcontentloaded' });
 
-    const initialTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
+    const initialTheme = await page.evaluate(() =>
+      document.documentElement.classList.contains('dark'),
+    );
     expect(initialTheme).toBe(false);
 
     const toggleToDark = page.getByRole('button', { name: /switch to dark mode/i });
@@ -16,7 +21,9 @@ test.describe('Theme Toggle E2E', () => {
     await toggleToDark.click();
     await page.waitForFunction(() => document.documentElement.classList.contains('dark'));
 
-    const toggledTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
+    const toggledTheme = await page.evaluate(() =>
+      document.documentElement.classList.contains('dark'),
+    );
     expect(toggledTheme).toBe(true);
 
     const toggleToLight = page.getByRole('button', { name: /switch to light mode/i });
@@ -29,7 +36,9 @@ test.describe('Theme Toggle E2E', () => {
 
     const toggleToDark = firstPage.getByRole('button', { name: /switch to dark mode/i });
     await toggleToDark.click();
-    await expect(firstPage.getByRole('button', { name: /switch to light mode/i })).toBeVisible();
+    await expect(
+      firstPage.getByRole('button', { name: /switch to light mode/i }),
+    ).toBeVisible();
 
     const storedTheme = await firstPage.evaluate((storageKey) => {
       const raw = window.localStorage.getItem(storageKey);
@@ -47,9 +56,13 @@ test.describe('Theme Toggle E2E', () => {
 
     const secondPage = await context.newPage();
     await secondPage.goto('/', { waitUntil: 'domcontentloaded' });
-    await secondPage.waitForFunction(() => document.documentElement.classList.contains('dark'));
+    await secondPage.waitForFunction(() =>
+      document.documentElement.classList.contains('dark'),
+    );
 
-    const toggleToLight = secondPage.getByRole('button', { name: /switch to light mode/i });
+    const toggleToLight = secondPage.getByRole('button', {
+      name: /switch to light mode/i,
+    });
     await expect(toggleToLight).toBeVisible();
   });
 

@@ -29,7 +29,10 @@ describe('systemPreferences', () => {
   });
 
   it('loads stored preferences', () => {
-    window.localStorage.setItem(SYSTEM_PREFERENCES_KEY, JSON.stringify({ theme: 'dark' }));
+    window.localStorage.setItem(
+      SYSTEM_PREFERENCES_KEY,
+      JSON.stringify({ theme: 'dark' }),
+    );
 
     const preferences = loadSystemPreferences();
 
@@ -71,7 +74,9 @@ describe('systemPreferences', () => {
     const updated = saveSystemPreferences({ theme: 'dark' });
 
     expect(updated).toEqual({ theme: 'dark' });
-    expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(JSON.stringify({ theme: 'dark' }));
+    expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(
+      JSON.stringify({ theme: 'dark' }),
+    );
     expect(console.error).not.toHaveBeenCalled();
   });
 
@@ -80,7 +85,9 @@ describe('systemPreferences', () => {
       throw new Error('write error');
     });
 
-    expect(() => saveSystemPreferences({ theme: 'dark' })).toThrow('Failed to persist system preferences.');
+    expect(() => saveSystemPreferences({ theme: 'dark' })).toThrow(
+      'Failed to persist system preferences.',
+    );
     expect(console.error).toHaveBeenCalledWith('Failed to persist system preferences.', {
       error: expect.any(Error),
       payload: { theme: 'dark' },
@@ -94,7 +101,9 @@ describe('systemPreferences', () => {
       throw new Error('serialise');
     });
 
-    expect(() => saveSystemPreferences({ theme: 'dark' })).toThrow('Failed to persist system preferences.');
+    expect(() => saveSystemPreferences({ theme: 'dark' })).toThrow(
+      'Failed to persist system preferences.',
+    );
     expect(console.error).toHaveBeenCalledWith('Failed to persist system preferences.', {
       error: expect.any(Error),
       payload: { theme: 'dark' },

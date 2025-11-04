@@ -15,7 +15,10 @@ const formatWithoutMeridiem = (date: Date) =>
     hour12: true,
   })
     .formatToParts(date)
-    .filter(({ type, value }) => type !== 'dayPeriod' && (type !== 'literal' || value.trim() !== ''))
+    .filter(
+      ({ type, value }) =>
+        type !== 'dayPeriod' && (type !== 'literal' || value.trim() !== ''),
+    )
     .map(({ value }) => value)
     .join('');
 

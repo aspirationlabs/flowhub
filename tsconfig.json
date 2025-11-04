@@ -2,17 +2,12 @@
   "compilerOptions": {
     "target": "ES2024",
     "module": "ESNext",
-    "lib": [
-      "ES2024",
-      "DOM"
-    ],
+    "lib": ["ES2024", "DOM"],
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "typescript/*"
-      ]
+      "@/*": ["typescript/*"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -21,11 +16,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "types": [
-      "node",
-      "jest",
-      "chrome"
-    ],
+    "types": ["node", "jest", "chrome"],
     "allowJs": true,
     "incremental": true,
     "isolatedModules": true,
@@ -43,7 +34,5 @@
     "typescript/.next/types/**/*.ts",
     "typescript/.next/dev/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
