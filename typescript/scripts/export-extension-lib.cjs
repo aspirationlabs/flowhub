@@ -72,6 +72,16 @@ function sanitizeDist(directory) {
           return match;
         }
 
+        // Skip non-JavaScript script types (e.g., application/json)
+        if (/type\s*=\s*["'](?!text\/javascript|module|$)/.test(rawAttrs)) {
+          return match;
+        }
+
+        // Skip Next.js data blocks
+        if (/id\s*=\s*["']__NEXT_DATA__["']/.test(rawAttrs)) {
+          return match;
+        }
+
         const code = scriptBody.trim();
         if (!code) {
           return match;
