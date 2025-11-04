@@ -4,9 +4,8 @@ import { SYSTEM_PREFERENCES_KEY } from '@/app/components/providers/systemPrefere
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Theme Toggle E2E', () => {
-  test('should display light mode by default and toggle to dark mode', async ({ context }) => {
-    const page = await context.newPage();
-    await page.goto('/', { waitUntil: 'networkidle' });
+  test('should display light mode by default and toggle to dark mode', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     const initialTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
     expect(initialTheme).toBe(false);
@@ -26,7 +25,7 @@ test.describe('Theme Toggle E2E', () => {
 
   test('should persist theme across new tabs', async ({ context }) => {
     const firstPage = await context.newPage();
-    await firstPage.goto('/', { waitUntil: 'networkidle' });
+    await firstPage.goto('/', { waitUntil: 'domcontentloaded' });
 
     const toggleToDark = firstPage.getByRole('button', { name: /switch to dark mode/i });
     await toggleToDark.click();
@@ -47,16 +46,15 @@ test.describe('Theme Toggle E2E', () => {
     expect(storedTheme).toBe('dark');
 
     const secondPage = await context.newPage();
-    await secondPage.goto('/', { waitUntil: 'networkidle' });
+    await secondPage.goto('/', { waitUntil: 'domcontentloaded' });
     await secondPage.waitForFunction(() => document.documentElement.classList.contains('dark'));
 
     const toggleToLight = secondPage.getByRole('button', { name: /switch to light mode/i });
     await expect(toggleToLight).toBeVisible();
   });
 
-  test('should display time and date widgets', async ({ context }) => {
-    const page = await context.newPage();
-    await page.goto('/', { waitUntil: 'networkidle' });
+  test('should display time and date widgets', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     const timeWidget = page.getByTestId('time-widget');
     await expect(timeWidget).toBeVisible();
@@ -67,9 +65,8 @@ test.describe('Theme Toggle E2E', () => {
     await expect(dateWidget).toContainText(/\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i);
   });
 
-  test('should have correct page title', async ({ context }) => {
-    const page = await context.newPage();
-    await page.goto('/', { waitUntil: 'networkidle' });
+  test('should have correct page title', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     await expect(page).toHaveTitle('New Tab');
   });
