@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Theme } from '@/types/theme';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 interface ThemeToggleProps {
   theme: Theme;

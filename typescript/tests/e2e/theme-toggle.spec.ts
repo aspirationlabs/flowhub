@@ -71,6 +71,6 @@ test.describe('Theme Toggle E2E', () => {
     const page = await context.newPage();
     await page.goto('/', { waitUntil: 'networkidle' });
 
-    await expect(page).toHaveTitle('FlowHub');
+    await expect(page).toHaveTitle('New Tab');
   });
 });

@@ -32,6 +32,23 @@ function mergePreferences(partial: Partial<SystemPreferences>): SystemPreference
   };
 }
 
+function resolveSystemTheme(): Theme {
+  if (typeof window === 'undefined') {
+    return DEFAULT_PREFERENCES.theme;
+  }
+
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch (error) {
+    console.warn('Unable to read system color scheme preference.', error);
+    return DEFAULT_PREFERENCES.theme;
+  }
+}
+
+function resolveFallbackPreferences(): SystemPreferences {
+  return mergePreferences({ theme: resolveSystemTheme() });
+}
+
 function readStoredPreferences(): Partial<SystemPreferences> | null {
   const storage = getStorage();
   if (!storage) {
@@ -54,7 +71,10 @@ function readStoredPreferences(): Partial<SystemPreferences> | null {
     const parsed = JSON.parse(storedValue) as Partial<SystemPreferences>;
     return parsed;
   } catch (error) {
-    console.warn('Failed to parse system preferences, falling back to defaults.', error);
+    console.warn('Failed to parse system preferences, falling back to defaults.', {
+      error,
+      storedValue,
+    });
     return null;
   }
 }
@@ -62,19 +82,17 @@ function readStoredPreferences(): Partial<SystemPreferences> | null {
 export function loadSystemPreferences(): SystemPreferences {
   const stored = readStoredPreferences();
   if (!stored) {
-    return DEFAULT_PREFERENCES;
+    const fallback = resolveFallbackPreferences();
+    console.info('No stored system preferences found; using defaults.', { fallback });
+    return fallback;
   }
 
   return mergePreferences(stored);
 }
 
-export function hasStoredSystemPreferences(): boolean {
-  return readStoredPreferences() !== null;
-}
-
 export function saveSystemPreferences(update: Partial<SystemPreferences>): SystemPreferences {
   const storage = getStorage();
-  const current = storage ? loadSystemPreferences() : DEFAULT_PREFERENCES;
+  const current = storage ? loadSystemPreferences() : resolveFallbackPreferences();
   const merged = mergePreferences({
     ...current,
     ...update,
@@ -85,9 +103,16 @@ export function saveSystemPreferences(update: Partial<SystemPreferences>): Syste
   }
 
   try {
-    storage.setItem(SYSTEM_PREFERENCES_KEY, JSON.stringify(merged));
+    const payload = JSON.stringify(merged);
+    storage.setItem(SYSTEM_PREFERENCES_KEY, payload);
   } catch (error) {
-    console.warn('Failed to persist system preferences.', error);
+    console.error('Failed to persist system preferences.', {
+      error,
+      payload: merged,
+    });
+    throw new Error('Failed to persist system preferences.', {
+      cause: error instanceof Error ? error : undefined,
+    });
   }
 
   return merged;

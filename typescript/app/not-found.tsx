@@ -14,7 +14,7 @@ export default function NotFound() {
       }}
     >
       <div>
-        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>FlowHub</h1>
+        <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Flowhub</h1>
         <p style={{ fontSize: '1.125rem' }}>Nothing to see here.</p>
       </div>
     </main>

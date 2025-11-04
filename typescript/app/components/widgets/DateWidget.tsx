@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent } from '../ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useCurrentTime } from './hooks/useCurrentTime';
 
 function useShorthandDate(currentTime: Date): string {

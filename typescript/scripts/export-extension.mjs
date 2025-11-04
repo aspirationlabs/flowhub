@@ -1,3 +1,4 @@
+// Prepares the statically exported Next.js app for packaging as a browser extension.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,13 +12,13 @@ const {
   ensureExists,
 } = exportHelpers;
 
-function runCommand(command, args, { repoRoot, description }) {
+function runCommand(command, args, { repoRoot, description, env = {} }) {
   const result = spawnSync(command, args, {
     cwd: repoRoot,
     stdio: 'inherit',
     env: {
       ...process.env,
-      NEXT_PRIVATE_BUILD_SKIP_GET_STATIC_EXPORT: '1',
+      ...env,
     },
   });
 
@@ -30,18 +31,34 @@ function runCommand(command, args, { repoRoot, description }) {
 }
 
 function ensureStaticExport({ repoRoot, exportDir }) {
-  const staticIndexPath = path.join(exportDir, 'index.html');
+  const candidateDirs = Array.from(
+    new Set([
+      exportDir,
+      path.join(repoRoot, 'out'),
+      path.join(repoRoot, '.next'),
+      path.join(repoRoot, 'typescript', '.next'),
+    ]),
+  );
 
-  if (!fs.existsSync(staticIndexPath) || process.env.FLOWHUB_FORCE_NEXT_BUILD === '1') {
-    runCommand('pnpm', ['exec', 'next', 'build'], {
+  const hasStaticExport = candidateDirs.some((dir) => fs.existsSync(path.join(dir, 'index.html')));
+  const shouldRebuild = process.env.FLOWHUB_FORCE_NEXT_BUILD === '1' || !hasStaticExport;
+
+  if (shouldRebuild) {
+    runCommand('pnpm', ['exec', 'next', 'build', '--webpack'], {
       repoRoot,
       description: 'next build',
     });
   }
 
-  ensureExists(staticIndexPath, 'Next.js static index file');
+  const resolvedDir = candidateDirs.find((dir) => fs.existsSync(path.join(dir, 'index.html')));
 
-  return { outputDir: exportDir };
+  if (!resolvedDir) {
+    throw new Error('Next.js static index file not found after build.');
+  }
+
+  ensureExists(path.join(resolvedDir, 'index.html'), 'Next.js static index file');
+
+  return { outputDir: resolvedDir };
 }
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));

@@ -1,5 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { useTheme } from '../../app/components/widgets/hooks/useTheme';
+import * as systemPreferences from '../../app/components/providers/systemPreferences';
 import { SYSTEM_PREFERENCES_KEY } from '../../app/components/providers/systemPreferences';
 
 describe('useTheme', () => {
@@ -17,10 +18,14 @@ describe('useTheme', () => {
     })) as unknown as typeof matchMedia;
 
     jest.spyOn(console, 'warn').mockImplementation(() => {});
+    jest.spyOn(console, 'info').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     (console.warn as jest.Mock).mockRestore();
+    (console.info as jest.Mock).mockRestore();
+    (console.error as jest.Mock).mockRestore();
   });
 
   it('should default to light theme when no stored preference exists', async () => {
@@ -84,6 +89,35 @@ describe('useTheme', () => {
     expect(result.current.theme).toBe('dark');
     expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(JSON.stringify({ theme: 'dark' }));
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+  });
+
+  it('should revert to previous theme and surface errors when persistence fails', async () => {
+    const saveSpy = jest
+      .spyOn(systemPreferences, 'saveSystemPreferences')
+      .mockImplementation(() => {
+        throw new Error('persist failed');
+      });
+
+    const { result } = renderHook(() => useTheme());
+
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+
+    expect(result.current.theme).toBe('light');
+
+    expect(() =>
+      act(() => {
+        result.current.toggleTheme();
+      }),
+    ).toThrow('persist failed');
+
+    expect(result.current.theme).toBe('light');
+    expect(console.error).toHaveBeenCalledWith('Failed to save theme preference.', {
+      error: expect.any(Error),
+    });
+
+    saveSpy.mockRestore();
   });
 
   it('should handle storage errors gracefully', async () => {

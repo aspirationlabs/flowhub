@@ -2,43 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Theme } from '@/types/theme';
-import {
-  hasStoredSystemPreferences,
-  loadSystemPreferences,
-  saveSystemPreferences,
-} from '../../providers/systemPreferences';
-
-function getSystemPreference(): Theme {
-  if (typeof window === 'undefined') {
-    return 'light';
-  }
-
-  try {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-  } catch (error) {
-    console.warn('Unable to read system color scheme preference.', error);
-  }
-
-  return 'light';
-}
+import { loadSystemPreferences, saveSystemPreferences } from '../../providers/systemPreferences';
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (hasStoredSystemPreferences()) {
-      return loadSystemPreferences().theme;
-    }
-    return getSystemPreference();
-  });
+  const [theme, setTheme] = useState<Theme>(() => loadSystemPreferences().theme);
 
   useEffect(() => {
-    if (hasStoredSystemPreferences()) {
-      setTheme(loadSystemPreferences().theme);
-      return;
-    }
-
-    setTheme(getSystemPreference());
+    setTheme(loadSystemPreferences().theme);
   }, []);
 
   useEffect(() => {
@@ -51,10 +21,17 @@ export function useTheme() {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    const newTheme: Theme = theme === 'light' ? 'dark' : 'light';
+    const previousTheme = theme;
+    const newTheme: Theme = previousTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
 
-    saveSystemPreferences({ theme: newTheme });
+    try {
+      saveSystemPreferences({ theme: newTheme });
+    } catch (error) {
+      console.error('Failed to save theme preference.', { error });
+      setTheme(previousTheme);
+      throw error;
+    }
   }, [theme]);
 
   return { theme, toggleTheme };
