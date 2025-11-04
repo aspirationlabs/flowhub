@@ -1,8 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
-const projectRoot = path.join(__dirname, '..', '..');
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.join(scriptDir, '..');
 const sizes = [16, 48, 128];
 const iconsDir = path.join(projectRoot, 'assets', 'icons');
 const mainAssetsDir = path.join(projectRoot, 'assets', 'main');

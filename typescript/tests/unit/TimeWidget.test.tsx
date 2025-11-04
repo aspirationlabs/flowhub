@@ -1,12 +1,23 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { TimeWidget } from '../../app/(dashboard)/components/TimeWidget.js';
+import { TimeWidget } from '../../app/components/widgets/TimeWidget';
 
-jest.mock('../../app/(dashboard)/hooks/useCurrentTime.js', () => ({
+jest.mock('../../app/components/widgets/hooks/useCurrentTime', () => ({
   useCurrentTime: jest.fn(),
 }));
 
-import { useCurrentTime } from '../../app/(dashboard)/hooks/useCurrentTime.js';
+import { useCurrentTime } from '../../app/components/widgets/hooks/useCurrentTime';
+
+const formatWithoutMeridiem = (date: Date) =>
+  new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  })
+    .formatToParts(date)
+    .filter(({ type, value }) => type !== 'dayPeriod' && (type !== 'literal' || value.trim() !== ''))
+    .map(({ value }) => value)
+    .join('');
 
 describe('TimeWidget', () => {
   it('should render time in correct format', () => {
@@ -15,7 +26,7 @@ describe('TimeWidget', () => {
 
     render(<TimeWidget />);
 
-    expect(screen.getByText(/2:30/)).toBeInTheDocument();
+    expect(screen.getByText(formatWithoutMeridiem(mockDate))).toBeInTheDocument();
   });
 
   it('should use system timezone', () => {
@@ -24,14 +35,7 @@ describe('TimeWidget', () => {
 
     render(<TimeWidget />);
 
-    const formatter = new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    const expectedTime = formatter.format(mockDate);
-    expect(screen.getByText(expectedTime)).toBeInTheDocument();
+    expect(screen.getByText(formatWithoutMeridiem(mockDate))).toBeInTheDocument();
   });
 
   it('should display time with PM correctly', () => {
@@ -40,8 +44,8 @@ describe('TimeWidget', () => {
 
     render(<TimeWidget />);
 
-    expect(screen.getByText(/4:45/)).toBeInTheDocument();
-    expect(screen.getByText(/PM/)).toBeInTheDocument();
+    expect(screen.getByText(formatWithoutMeridiem(mockDate))).toBeInTheDocument();
+    expect(screen.queryByText(/PM/i)).not.toBeInTheDocument();
   });
 
   it('should display time with AM correctly', () => {
@@ -50,7 +54,7 @@ describe('TimeWidget', () => {
 
     render(<TimeWidget />);
 
-    expect(screen.getByText(/9:30/)).toBeInTheDocument();
-    expect(screen.getByText(/AM/)).toBeInTheDocument();
+    expect(screen.getByText(formatWithoutMeridiem(mockDate))).toBeInTheDocument();
+    expect(screen.queryByText(/AM/i)).not.toBeInTheDocument();
   });
 });

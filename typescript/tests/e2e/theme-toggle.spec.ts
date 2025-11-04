@@ -1,71 +1,76 @@
 import { test, expect } from '@playwright/test';
+import { SYSTEM_PREFERENCES_KEY } from '@/app/components/providers/systemPreferences';
+
+test.describe.configure({ mode: 'serial' });
 
 test.describe('Theme Toggle E2E', () => {
   test('should display light mode by default and toggle to dark mode', async ({ context }) => {
-    const newPage = await context.newPage();
-    await newPage.goto('chrome://newtab');
-    await newPage.waitForLoadState('networkidle');
+    const page = await context.newPage();
+    await page.goto('/', { waitUntil: 'networkidle' });
 
-    const bgColor = await newPage.evaluate(() => {
-      return window.getComputedStyle(document.body).backgroundColor;
-    });
-    expect(bgColor).toContain('rgb(255, 255, 255)');
+    const initialTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
+    expect(initialTheme).toBe(false);
 
-    const themeButton = newPage.getByRole('button', { name: /light/i });
-    await expect(themeButton).toBeVisible();
+    const toggleToDark = page.getByRole('button', { name: /switch to dark mode/i });
+    await expect(toggleToDark).toBeVisible();
 
-    await themeButton.click();
-    await newPage.waitForTimeout(500);
+    await toggleToDark.click();
+    await page.waitForFunction(() => document.documentElement.classList.contains('dark'));
 
-    const darkBgColor = await newPage.evaluate(() => {
-      return window.getComputedStyle(document.body).backgroundColor;
-    });
-    expect(darkBgColor).not.toContain('rgb(255, 255, 255)');
+    const toggledTheme = await page.evaluate(() => document.documentElement.classList.contains('dark'));
+    expect(toggledTheme).toBe(true);
 
-    const darkThemeButton = newPage.getByRole('button', { name: /dark/i });
-    await expect(darkThemeButton).toBeVisible();
+    const toggleToLight = page.getByRole('button', { name: /switch to light mode/i });
+    await expect(toggleToLight).toBeVisible();
   });
 
   test('should persist theme across new tabs', async ({ context }) => {
-    const newPage = await context.newPage();
-    await newPage.goto('chrome://newtab');
-    await newPage.waitForLoadState('networkidle');
+    const firstPage = await context.newPage();
+    await firstPage.goto('/', { waitUntil: 'networkidle' });
 
-    const themeButton = newPage.getByRole('button', { name: /light/i });
-    await themeButton.click();
-    await newPage.waitForTimeout(500);
+    const toggleToDark = firstPage.getByRole('button', { name: /switch to dark mode/i });
+    await toggleToDark.click();
+    await expect(firstPage.getByRole('button', { name: /switch to light mode/i })).toBeVisible();
+
+    const storedTheme = await firstPage.evaluate((storageKey) => {
+      const raw = window.localStorage.getItem(storageKey);
+      if (!raw) {
+        return null;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        return typeof parsed === 'object' && parsed !== null ? parsed.theme : null;
+      } catch {
+        return null;
+      }
+    }, SYSTEM_PREFERENCES_KEY);
+    expect(storedTheme).toBe('dark');
 
     const secondPage = await context.newPage();
-    await secondPage.goto('chrome://newtab');
-    await secondPage.waitForLoadState('networkidle');
+    await secondPage.goto('/', { waitUntil: 'networkidle' });
+    await secondPage.waitForFunction(() => document.documentElement.classList.contains('dark'));
 
-    const darkThemeButton = secondPage.getByRole('button', { name: /dark/i });
-    await expect(darkThemeButton).toBeVisible();
-
-    const darkBgColor = await secondPage.evaluate(() => {
-      return window.getComputedStyle(document.body).backgroundColor;
-    });
-    expect(darkBgColor).not.toContain('rgb(255, 255, 255)');
+    const toggleToLight = secondPage.getByRole('button', { name: /switch to light mode/i });
+    await expect(toggleToLight).toBeVisible();
   });
 
   test('should display time and date widgets', async ({ context }) => {
-    const newPage = await context.newPage();
-    await newPage.goto('chrome://newtab');
-    await newPage.waitForLoadState('networkidle');
+    const page = await context.newPage();
+    await page.goto('/', { waitUntil: 'networkidle' });
 
-    const timeWidget = newPage.locator('div').filter({ hasText: /\d{1,2}:\d{2}/ }).first();
+    const timeWidget = page.getByTestId('time-widget');
     await expect(timeWidget).toBeVisible();
+    await expect(timeWidget).toContainText(/\d{1,2}:\d{2}/);
 
-    const dateWidget = newPage.locator('div').filter({ hasText: /(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)/ }).first();
+    const dateWidget = page.getByTestId('date-widget');
     await expect(dateWidget).toBeVisible();
+    await expect(dateWidget).toContainText(/\b(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i);
   });
 
   test('should have correct page title', async ({ context }) => {
-    const newPage = await context.newPage();
-    await newPage.goto('chrome://newtab');
-    await newPage.waitForLoadState('networkidle');
+    const page = await context.newPage();
+    await page.goto('/', { waitUntil: 'networkidle' });
 
-    const title = await newPage.title();
-    expect(title).toBe('New Tab');
+    await expect(page).toHaveTitle('FlowHub');
   });
 });

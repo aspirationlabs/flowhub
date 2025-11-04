@@ -1,8 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
-import { useTheme } from '../../app/(dashboard)/hooks/useTheme.js';
+import { useTheme } from '../../app/components/widgets/hooks/useTheme';
+import { SYSTEM_PREFERENCES_KEY } from '../../app/components/providers/systemPreferences';
 
 describe('useTheme', () => {
   beforeEach(() => {
+    window.localStorage.clear();
     global.matchMedia = jest.fn(() => ({
       matches: false,
       media: '(prefers-color-scheme: light)',
@@ -13,6 +15,12 @@ describe('useTheme', () => {
       removeEventListener: jest.fn(),
       dispatchEvent: jest.fn(),
     })) as unknown as typeof matchMedia;
+
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.warn as jest.Mock).mockRestore();
   });
 
   it('should default to light theme when no stored preference exists', async () => {
@@ -47,9 +55,7 @@ describe('useTheme', () => {
   });
 
   it('should load stored theme preference', async () => {
-    (chrome.storage.sync.get as jest.Mock).mockImplementation((keys, callback) => {
-      callback({ theme: 'dark' });
-    });
+    window.localStorage.setItem(SYSTEM_PREFERENCES_KEY, JSON.stringify({ theme: 'dark' }));
 
     const { result } = renderHook(() => useTheme());
 
@@ -61,14 +67,6 @@ describe('useTheme', () => {
   });
 
   it('should toggle theme and persist to storage', async () => {
-    (chrome.storage.sync.get as jest.Mock).mockImplementation((keys, callback) => {
-      if (typeof keys === 'string') {
-        callback({ [keys]: undefined });
-      } else {
-        callback({});
-      }
-    });
-
     const { result } = renderHook(() => useTheme());
 
     await act(async () => {
@@ -76,6 +74,7 @@ describe('useTheme', () => {
     });
 
     expect(result.current.theme).toBe('light');
+    expect(document.documentElement.classList.contains('dark')).toBe(false);
 
     await act(async () => {
       result.current.toggleTheme();
@@ -83,13 +82,12 @@ describe('useTheme', () => {
     });
 
     expect(result.current.theme).toBe('dark');
-    expect(chrome.storage.sync.set).toHaveBeenCalledWith({ theme: 'dark' }, expect.any(Function));
+    expect(window.localStorage.getItem(SYSTEM_PREFERENCES_KEY)).toEqual(JSON.stringify({ theme: 'dark' }));
+    expect(document.documentElement.classList.contains('dark')).toBe(true);
   });
 
   it('should handle storage errors gracefully', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-
-    (chrome.storage.sync.get as jest.Mock).mockImplementation(() => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new Error('Storage error');
     });
 
@@ -100,8 +98,11 @@ describe('useTheme', () => {
     });
 
     expect(result.current.theme).toBe('light');
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error accessing chrome.storage:', expect.any(Error));
+    expect(console.warn).toHaveBeenCalledWith(
+      'Failed to read system preferences from storage, falling back to defaults.',
+      expect.any(Error),
+    );
 
-    consoleErrorSpy.mockRestore();
+    (Storage.prototype.getItem as jest.Mock).mockRestore();
   });
 });

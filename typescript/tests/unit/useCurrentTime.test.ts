@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useCurrentTime } from '../../app/(dashboard)/hooks/useCurrentTime.js';
+import { useCurrentTime } from '../../app/components/widgets/hooks/useCurrentTime';
 
 describe('useCurrentTime', () => {
   beforeEach(() => {

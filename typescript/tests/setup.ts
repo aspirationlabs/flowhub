@@ -44,4 +44,6 @@ beforeEach(() => {
   Object.keys(storageMock).forEach((key) => delete storageMock[key]);
   (global.chrome.storage.sync.get as jest.Mock).mockClear();
   (global.chrome.storage.sync.set as jest.Mock).mockClear();
+  window.localStorage.clear();
+  document.documentElement.className = '';
 });
