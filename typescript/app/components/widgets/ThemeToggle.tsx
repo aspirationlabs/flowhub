@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 interface ThemeToggleProps {
   theme: Theme;
   onToggle: () => void;
+  isReady?: boolean;
 }
 
 function SunIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -38,7 +39,11 @@ function MoonIcon(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
+export function ThemeToggle({ theme, onToggle, isReady = false }: ThemeToggleProps) {
+  if (!isReady) {
+    return null;
+  }
+
   const isDark = theme === 'dark';
   const Icon = isDark ? MoonIcon : SunIcon;
 
