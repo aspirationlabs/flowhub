@@ -17,9 +17,10 @@ describe('prepareExtensionBundle', () => {
   });
 
   it('uses the export output provided by runExport', async () => {
-    const { prepareExtensionBundle, getDefaultPaths } = require(
-      '../../scripts/export-extension-lib.cjs'
-    );
+    const {
+      prepareExtensionBundle,
+      getDefaultPaths,
+    } = require('../../scripts/export-extension-lib.cjs');
 
     const repoRoot = tmpRoot;
     if (!repoRoot) {
@@ -39,11 +40,7 @@ describe('prepareExtensionBundle', () => {
 
     // Provide the manifest and icons required by the bundler.
     fs.mkdirSync(paths.assetsDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(paths.assetsDir, 'icon-32.png'),
-      'icon-bytes',
-      'utf8',
-    );
+    fs.writeFileSync(path.join(paths.assetsDir, 'icon-32.png'), 'icon-bytes', 'utf8');
     fs.writeFileSync(
       paths.manifestPath,
       JSON.stringify({ manifest_version: 3, name: 'Flowhub', version: '0.1' }),
@@ -65,16 +62,8 @@ describe('prepareExtensionBundle', () => {
       '<html><head></head><body><script>window.__test__ = "inline";</script><script src="/_next/static/main.js"></script><script>(function(){self.__next_f=self.__next_f||[];})();</script></body></html>',
       'utf8',
     );
-    fs.writeFileSync(
-      path.join(exportOutput, '__next._tree.txt'),
-      'reserved',
-      'utf8',
-    );
-    fs.writeFileSync(
-      path.join(exportOutput, '_not-found.html'),
-      'not-found',
-      'utf8',
-    );
+    fs.writeFileSync(path.join(exportOutput, '__next._tree.txt'), 'reserved', 'utf8');
+    fs.writeFileSync(path.join(exportOutput, '_not-found.html'), 'not-found', 'utf8');
 
     expect(() =>
       prepareExtensionBundle({
@@ -93,9 +82,7 @@ describe('prepareExtensionBundle', () => {
     const renamedAssetDir = path.join(paths.distDir, 'next', 'static');
     expect(fs.existsSync(renamedAssetDir)).toBe(true);
     expect(fs.existsSync(path.join(paths.distDir, '_next'))).toBe(false);
-    expect(fs.existsSync(path.join(paths.distDir, '_not-found.html'))).toBe(
-      false,
-    );
+    expect(fs.existsSync(path.join(paths.distDir, '_not-found.html'))).toBe(false);
 
     const inlineDir = path.join(paths.distDir, 'next', 'inline');
     const inlineScriptPath = path.join(inlineDir, 'inline-1.js');

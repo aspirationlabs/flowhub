@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { spawnSync } = require('node:child_process');
+import { spawnSync } from 'node:child_process';
 
 const files = process.argv.slice(2);
 

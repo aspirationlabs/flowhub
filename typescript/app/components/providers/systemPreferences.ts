@@ -59,7 +59,10 @@ function readStoredPreferences(): Partial<SystemPreferences> | null {
   try {
     storedValue = storage.getItem(SYSTEM_PREFERENCES_KEY);
   } catch (error) {
-    console.warn('Failed to read system preferences from storage, falling back to defaults.', error);
+    console.warn(
+      'Failed to read system preferences from storage, falling back to defaults.',
+      error,
+    );
     return null;
   }
 
@@ -90,7 +93,9 @@ export function loadSystemPreferences(): SystemPreferences {
   return mergePreferences(stored);
 }
 
-export function saveSystemPreferences(update: Partial<SystemPreferences>): SystemPreferences {
+export function saveSystemPreferences(
+  update: Partial<SystemPreferences>,
+): SystemPreferences {
   const storage = getStorage();
   const current = storage ? loadSystemPreferences() : resolveFallbackPreferences();
   const merged = mergePreferences({

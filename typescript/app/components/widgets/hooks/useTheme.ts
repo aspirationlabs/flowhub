@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Theme } from '@/types/theme';
-import { loadSystemPreferences, saveSystemPreferences } from '../../providers/systemPreferences';
+import {
+  loadSystemPreferences,
+  saveSystemPreferences,
+} from '../../providers/systemPreferences';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => loadSystemPreferences().theme);

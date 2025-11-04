@@ -27,15 +27,11 @@ function ensureExtensionBundle() {
       return extensionDistPath;
     }
 
-    throw new Error(
-      'Failed to build extension bundle before starting Playwright tests.',
-    );
+    throw new Error('Failed to build extension bundle before starting Playwright tests.');
   }
 
   if (!fs.existsSync(extensionDistPath)) {
-    throw new Error(
-      `Extension bundle not found at ${extensionDistPath} after build.`,
-    );
+    throw new Error(`Extension bundle not found at ${extensionDistPath} after build.`);
   }
 
   return extensionDistPath;
@@ -78,7 +74,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'node ./node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 4000',
+    command:
+      'node ./node_modules/next/dist/bin/next dev --hostname 127.0.0.1 --port 4000',
     url: 'http://127.0.0.1:4000',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',

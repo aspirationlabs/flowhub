@@ -9,26 +9,12 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
-  "ignorePatterns": [
-    "node_modules/",
-    "dist/",
-    ".next/",
-    "coverage/"
-  ],
+  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "ignorePatterns": ["node_modules/", "dist/", ".next/", "coverage/", "next-env.d.ts"],
   "overrides": [
     {
-      "files": [
-        "typescript/tests/**/*.test.ts",
-        "typescript/tests/**/*.test.tsx"
-      ],
+      "files": ["typescript/tests/**/*.test.ts", "typescript/tests/**/*.test.tsx"],
       "env": {
         "jest": true
       }
