@@ -9,8 +9,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const VARIANT_STYLES: Record<CardVariant, string> = {
   default: 'bg-card text-card-foreground shadow-none backdrop-blur',
-  glass:
-    'bg-transparent text-slate-900 dark:text-white shadow-none border-none backdrop-blur-sm',
+  glass: 'bg-transparent text-slate-900 dark:text-white shadow-none border-none',
 };
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
