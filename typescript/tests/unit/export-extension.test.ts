@@ -53,14 +53,26 @@ describe('prepareExtensionBundle', () => {
     // Stub runExport with the correct static export output (index.html present).
     const exportOutput = path.join(repoRoot, 'next-export');
     fs.mkdirSync(exportOutput, { recursive: true });
+    const nextStaticDir = path.join(exportOutput, '_next', 'static');
+    fs.mkdirSync(nextStaticDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(nextStaticDir, 'main.js'),
+      'console.log("next asset");',
+      'utf8',
+    );
     fs.writeFileSync(
       path.join(exportOutput, 'index.html'),
-      '<html>export output</html>',
+      '<html><head></head><body><script>window.__test__ = "inline";</script><script src="/_next/static/main.js"></script><script>(function(){self.__next_f=self.__next_f||[];})();</script></body></html>',
       'utf8',
     );
     fs.writeFileSync(
       path.join(exportOutput, '__next._tree.txt'),
       'reserved',
+      'utf8',
+    );
+    fs.writeFileSync(
+      path.join(exportOutput, '_not-found.html'),
+      'not-found',
       'utf8',
     );
 
@@ -77,5 +89,25 @@ describe('prepareExtensionBundle', () => {
 
     const reservedFile = path.join(paths.distDir, '__next._tree.txt');
     expect(fs.existsSync(reservedFile)).toBe(false);
+
+    const renamedAssetDir = path.join(paths.distDir, 'next', 'static');
+    expect(fs.existsSync(renamedAssetDir)).toBe(true);
+    expect(fs.existsSync(path.join(paths.distDir, '_next'))).toBe(false);
+    expect(fs.existsSync(path.join(paths.distDir, '_not-found.html'))).toBe(
+      false,
+    );
+
+    const inlineDir = path.join(paths.distDir, 'next', 'inline');
+    const inlineScriptPath = path.join(inlineDir, 'inline-1.js');
+    expect(fs.existsSync(inlineScriptPath)).toBe(true);
+    const inlineScriptContents = fs.readFileSync(inlineScriptPath, 'utf8');
+    expect(inlineScriptContents).toContain('window.__test__ = "inline"');
+    expect(inlineScriptContents.includes('/_next/')).toBe(false);
+
+    const indexContents = fs.readFileSync(bundledIndex, 'utf8');
+    expect(indexContents.includes('/_next/')).toBe(false);
+    expect(indexContents.includes('/next/static/main.js')).toBe(true);
+    expect(indexContents.includes('window.__test__')).toBe(false);
+    expect(indexContents).toContain('<script src="/next/inline/inline-1.js"></script>');
   });
 });

@@ -11,33 +11,37 @@ const {
   ensureExists,
 } = exportHelpers;
 
-function ensureStaticExport({ repoRoot, exportDir }) {
-  const staticIndexPath = path.join(exportDir, 'index.html');
-
-  if (fs.existsSync(staticIndexPath)) {
-    return { outputDir: exportDir };
-  }
-
-  const buildResult = spawnSync('pnpm', ['exec', 'next', 'build'], {
+function runCommand(command, args, { repoRoot, description }) {
+  const result = spawnSync(command, args, {
     cwd: repoRoot,
     stdio: 'inherit',
     env: {
       ...process.env,
+      NEXT_PRIVATE_BUILD_SKIP_GET_STATIC_EXPORT: '1',
     },
   });
 
-  if (buildResult.status !== 0) {
+  if (result.status !== 0) {
     const cause =
-      buildResult.error ??
-      new Error(`next build exited with status ${buildResult.status}`);
+      result.error ??
+      new Error(`${description} exited with status ${result.status}`);
     throw cause;
+  }
+}
+
+function ensureStaticExport({ repoRoot, exportDir }) {
+  const staticIndexPath = path.join(exportDir, 'index.html');
+
+  if (!fs.existsSync(staticIndexPath) || process.env.FLOWHUB_FORCE_NEXT_BUILD === '1') {
+    runCommand('pnpm', ['exec', 'next', 'build'], {
+      repoRoot,
+      description: 'next build',
+    });
   }
 
   ensureExists(staticIndexPath, 'Next.js static index file');
 
-  return {
-    outputDir: exportDir,
-  };
+  return { outputDir: exportDir };
 }
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));

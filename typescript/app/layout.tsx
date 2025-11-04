@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'FlowHub',
+  title: 'New Tab',
   description: 'Visualize your flow state and crush your aspirations.',
 };
 

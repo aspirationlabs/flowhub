@@ -22,5 +22,6 @@
 - [x] Jest regression test authored to protect export-output usage.
 - [x] Export script refactored to run `next build`, stage artifacts, and strip Chrome-reserved files; Playwright config ensures `dist/` exists.
 - [x] ESLint ignore globs expanded so generated directories (nested `.next`, `dist`, `out`, etc.) stay out of lint scans.
+- [x] Browser extension polish: new-tab title reset to `New Tab` and CSP relaxed (`'unsafe-inline'`) so Next’s inline bootstraps hydrate correctly.
 - [x] Validation: `COREPACK_ENABLE_STRICT=0 pnpm lint`, `COREPACK_ENABLE_STRICT=0 pnpm typecheck`, and `COREPACK_ENABLE_STRICT=0 pnpm test -- export-extension`.
 - [ ] Manual `pnpm run build` smoke test (still recommended outside the restricted environment; Turbopack cannot bind to a port here).
