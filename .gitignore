@@ -3,3 +3,10 @@
 .env.local
 
 node_modules/*
+
+.claude/settings.local.json
+dist/
+.next/
+typescript/.next/
+playwright-report/
+test-results/

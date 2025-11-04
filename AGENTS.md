@@ -2,7 +2,7 @@
 
 ## Mission & Scope
 - Deliver a serverless, TypeScript-driven dashboard that surfaces per-connector usage and an aggregated summary for a user's daily activity.
-- Start as a browser new-tab experience powered by Next.js (App Router), Shadcn UI, and pnpm-managed dependencies.
+- Start as a browser new-tab experience powered by Next.js (App Router), Shadcn UI, and pnpm-managed dependencies. Try to piece together all components using Shadcn components.
 - Support Anthropic, OpenAI, and OpenRouter connectors with extensible abstractions for credentials, data fetching, caching, and presentation.
 - Prepare for future polyglot expansion (e.g., Python backend services) without restructuring the existing TypeScript code.
 
@@ -25,46 +25,58 @@
 flowhub/
 ├─ typescript/
 │  ├─ app/
-│  │  ├─ layout.tsx
-│  │  ├─ page.tsx
-│  │  ├─ globals.css
+│  │  ├─ layout.tsx                  # App Router root layout (global styles, metadata)
+│  │  ├─ page.tsx                    # Dashboard shell (server component) that renders widgets
+│  │  ├─ globals.css                 # Global styles imported by layout
+│  │  ├─ components/
+│  │  │  ├─ widgets/                 # Individual dashboard widgets (Time, Date, etc.)
+│  │  │  ├─ layout/                  # Grid/composition primitives for arranging widgets
+│  │  │  ├─ ui/                      # Shadcn UI primitives customized for FlowHub
+│  │  │  └─ providers/               # Client providers (theme, telemetry, preferences)
 │  │  ├─ (dashboard)/
-│  │  │  ├─ page.tsx
+│  │  │  ├─ page.tsx                 # Server component entry for the dashboard route
 │  │  │  └─ components/
-│  │  │     ├─ core/                # shared cards, tables, filters, summary UI
-│  │  │     └─ connectors/
-│  │  │        ├─ anthropic/
-│  │  │        ├─ openai/
-│  │  │        └─ openrouter/
+│  │  │     ├─ core/                 # Shared cards, tables, filters, summary UI
+│  │  │     └─ connectors/           # Per-connector widgets surfaced on the dashboard
 │  │  ├─ (connectors)/
-│  │  │  ├─ page.tsx
+│  │  │  ├─ page.tsx                 # Connector discovery and setup surface
 │  │  │  └─ components/
 │  │  │     ├─ ConnectorList.tsx
 │  │  │     ├─ ConnectorModal.tsx
 │  │  │     └─ ConnectorStatus.tsx
 │  │  └─ api/
 │  │     └─ usage/
-│  │        └─ route.ts
+│  │        └─ route.ts              # Serverless route that proxies connector usage metrics
 │  ├─ connectors/
-│  │  ├─ registry.ts
+│  │  ├─ registry.ts                 # Connector metadata (id, label, capabilities)
 │  │  ├─ anthropic/
 │  │  │  ├─ client.ts
 │  │  │  ├─ schema.ts
 │  │  │  ├─ transformers.ts
 │  │  │  └─ index.ts
-│  │  ├─ openai/…
-│  │  └─ openrouter/…
+│  │  ├─ openai/
+│  │  └─ openrouter/
 │  ├─ storage/
 │  │  ├─ keys/
-│  │  │  ├─ key-store.ts
-│  │  │  └─ local-session.ts
+│  │  │  ├─ key-store.ts             # KeyStore contract and adapters
+│  │  │  └─ local-session.ts         # Session storage implementation of KeyStore
 │  │  ├─ cache/
 │  │  │  ├─ cache-store.ts
 │  │  │  └─ browser-cache.ts
 │  │  └─ adapters/
-│  │     └─ index.ts
+│  │     └─ index.ts                 # Export surface for swappable storage adapters
 │  ├─ config/
-│  │  └─ connectors.ts
+│  │  └─ connectors.ts               # Declarative connector configuration
+│  ├─ state/
+│  │  └─ connectors-store.ts         # Zustand/React state for connector status and keys
+│  ├─ lib/
+│  │  ├─ http/
+│  │  │  └─ fetcher.ts               # Shared fetch wrapper with retries/auth
+│  │  └─ telemetry/
+│  │     └─ logging.ts
+│  ├─ assets/
+│  │  ├─ main/                       # Source design assets (e.g., FlowHubIcon.png)
+│  │  └─ icons/                      # Generated extension icon sizes
 │  ├─ types/
 │  │  ├─ dashboard.ts
 │  │  ├─ connectors.ts
@@ -73,37 +85,41 @@ flowhub/
 │  │  ├─ date.ts
 │  │  ├─ formatting.ts
 │  │  └─ aggregation.ts
-│  ├─ state/
-│  │  └─ connectors-store.ts
-│  ├─ lib/
-│  │  ├─ http/fetcher.ts
-│  │  └─ telemetry/logging.ts
 │  ├─ tests/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ e2e/
+│  │  ├─ unit/                       # Jest unit specs for utilities, connectors, storage
+│  │  ├─ integration/                # Jest integration tests across connector pipelines
+│  │  └─ e2e/                        # Playwright end-to-end scenarios
 │  └─ scripts/
-│     └─ generate-connector.ts
+│     ├─ generate-connector.ts
+│     ├─ generate-icons.mjs
+│     └─ export-extension.mjs
 ├─ python/
-│  └─ api/                         # placeholder for future backend endpoints
-└─ (root configs: package.json, pnpm-lock.yaml, next.config.js, tsconfig.json,
+│  └─ api/                         # Placeholder for future backend endpoints
+└─ (root configs: package.json, pnpm-lock.yaml, next.config.ts, tsconfig.json,
    tailwind.config.ts, components.json, .eslintrc.json, .prettierrc, .env.example, README.md)
 ```
 
 ## Key Modules & Responsibilities
-- **`typescript/app/(dashboard)`** – renders the primary dashboard view. Consumes summary metrics and per-connector components supplied by the registry.
-- **`typescript/app/(connectors)`** – manages connector discovery, setup modals, and connection status display.
-- **`typescript/connectors/*`** – implements per-connector API clients, data schemas (zod), transformation logic, and exports typed functions for UI consumption.
-- **`typescript/connectors/registry.ts`** – central catalog describing connector metadata (id, label, metrics, facets, UI factory pointers) used by dashboard summaries and connectors list.
-- **`typescript/storage/keys`** – provides the `KeyStore` interface (`getKey`, `setKey`, `getStatus`) with a `local-session` implementation. Future encrypted or remote stores can replace this module without touching UI.
-- **`typescript/storage/cache`** – caches raw API responses with pluggable adapters; initial implementation wraps browser session/local storage.
-- **`typescript/config/connectors.ts`** – declarative configuration for facets, default timeframes, and dashboard capabilities per connector.
-- **`typescript/types`** – shared DTOs for summary metrics, connector facets, API response shapes, and transformation outputs.
-- **`typescript/utils`** – formatting, aggregation, and date utilities reused across connectors.
-- **`typescript/state/connectors-store.ts`** – manages connector statuses and key presence via Zustand or React context.
-- **`typescript/lib/http/fetcher.ts`** – wraps `fetch` with retries, auth header injection, and response normalization per connector needs.
-- **`typescript/tests`** – holds unit (transformations, key-store), integration (connector pipelines), and future e2e specs (Playwright).
-- **`typescript/scripts/generate-connector.ts`** – scaffolds new connector modules with boilerplate client/schema/transformer/UI files.
+- **`typescript/app/layout.tsx`** – wraps every route, injects global CSS, and wires top-level providers.
+- **`typescript/app/page.tsx`** – server component that selects dashboard state and renders the client shell.
+- **`typescript/app/components/widgets/*`** – Shadcn-based widgets (time, summaries, charts) that populate the dashboard grid.
+- **`typescript/app/components/layout/*`** – grid primitives and layout helpers that arrange widgets responsively.
+- **`typescript/app/components/providers/*`** – React providers for theme, telemetry, connector state hydration, etc.
+- **`typescript/app/(dashboard)`** – Next.js route group that composes per-connector widgets and summary cards.
+- **`typescript/app/(connectors)`** – discovery/setup surface with `ConnectorList`, `ConnectorModal`, and status UI.
+- **`typescript/app/api/usage/route.ts`** – serverless endpoint that fetches connector usage metrics via shared clients.
+- **`typescript/connectors/*`** – connector-specific clients, schema validation, transformers, and registries powering the UI.
+- **`typescript/storage/keys`** – KeyStore interface plus `local-session` adapter for storing credentials.
+- **`typescript/storage/cache`** – cache contracts and browser-backed implementations for raw connector payloads.
+- **`typescript/config/connectors.ts`** – declarative connector metadata (facets, defaults, capabilities) consumed by UI + registry.
+- **`typescript/state/connectors-store.ts`** – shared state (Zustand/React) exposing connector connection status and key presence.
+- **`typescript/lib/http/fetcher.ts`** – Fetch wrapper that injects auth headers, retries, and normalizes responses.
+- **`typescript/lib/telemetry/logging.ts`** – centralized logging hooks for connector/client observability.
+- **`typescript/assets`** – source and generated icon assets used by the browser extension packaging flow.
+- **`typescript/types`** – DTOs and shared types for connectors, dashboard summaries, and API responses.
+- **`typescript/utils`** – formatting, aggregation, and date utilities reused across connectors and UI.
+- **`typescript/tests`** – Jest-powered unit/integration suites plus Playwright e2e specs covering connectors, storage, and UI flows.
+- **`typescript/scripts/*`** – developer tooling for connector scaffolding, icon generation, and extension export.
 
 ## Tooling & Validation
 - **Package management:** pnpm with pinned version (`packageManager` field) and committed `pnpm-lock.yaml`.
