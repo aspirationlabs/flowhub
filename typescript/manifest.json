@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Flowhub",
   "version": "1.0.0",
-  "description": "Visualize your flow state and crush your aspirations.",
+  "description": "Visualize your flow state to crush your aspirations.",
   "permissions": ["storage"],
   "chrome_url_overrides": {
     "newtab": "index.html"

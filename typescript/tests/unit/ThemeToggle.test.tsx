@@ -5,7 +5,7 @@ import { ThemeToggle } from '../../app/components/widgets/ThemeToggle';
 describe('ThemeToggle', () => {
   it('should render theme toggle button', () => {
     const mockToggleTheme = jest.fn();
-    render(<ThemeToggle theme="light" onToggle={mockToggleTheme} />);
+    render(<ThemeToggle theme="light" onToggle={mockToggleTheme} isReady={true} />);
 
     expect(
       screen.getByRole('button', { name: /switch to dark mode/i }),
@@ -14,7 +14,7 @@ describe('ThemeToggle', () => {
 
   it('should display "Dark" when theme is dark', () => {
     const mockToggleTheme = jest.fn();
-    render(<ThemeToggle theme="dark" onToggle={mockToggleTheme} />);
+    render(<ThemeToggle theme="dark" onToggle={mockToggleTheme} isReady={true} />);
 
     expect(
       screen.getByRole('button', { name: /switch to light mode/i }),
@@ -23,7 +23,7 @@ describe('ThemeToggle', () => {
 
   it('should call onToggle when button is clicked', () => {
     const mockToggleTheme = jest.fn();
-    render(<ThemeToggle theme="light" onToggle={mockToggleTheme} />);
+    render(<ThemeToggle theme="light" onToggle={mockToggleTheme} isReady={true} />);
 
     const button = screen.getByRole('button');
     fireEvent.click(button);
@@ -34,7 +34,7 @@ describe('ThemeToggle', () => {
   it('should be positioned in top-right corner', () => {
     const mockToggleTheme = jest.fn();
     const { container } = render(
-      <ThemeToggle theme="light" onToggle={mockToggleTheme} />,
+      <ThemeToggle theme="light" onToggle={mockToggleTheme} isReady={true} />,
     );
 
     const button = container.querySelector('button');

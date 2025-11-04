@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { useCurrentTime } from './hooks/useCurrentTime';
 
 function useShorthandDate(currentTime: Date): string {
@@ -24,12 +24,14 @@ export function DateWidget() {
   const formattedDate = useShorthandDate(currentTime);
 
   return (
-    <Card className="w-full bg-background/70" data-testid="date-widget">
-      <CardContent className="flex items-center justify-center py-6">
-        <span className="text-3xl font-light text-foreground sm:text-4xl">
-          {formattedDate}
-        </span>
-      </CardContent>
+    <Card
+      variant="glass"
+      className="inline-flex items-center justify-center px-6 py-3"
+      data-testid="date-widget"
+    >
+      <span className="text-2xl font-light text-slate-900 drop-shadow sm:text-3xl dark:text-white">
+        {formattedDate}
+      </span>
     </Card>
   );
 }

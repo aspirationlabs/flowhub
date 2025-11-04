@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { useCurrentTime } from './hooks/useCurrentTime';
 
 export function TimeWidget() {
@@ -23,12 +23,14 @@ export function TimeWidget() {
     .join('');
 
   return (
-    <Card className="w-full bg-background/70" data-testid="time-widget">
-      <CardContent className="flex items-center justify-center py-12">
-        <span className="text-8xl font-semibold tracking-tight sm:text-9xl">
-          {formattedTime}
-        </span>
-      </CardContent>
+    <Card
+      variant="glass"
+      className="inline-flex items-center justify-center px-6 py-4"
+      data-testid="time-widget"
+    >
+      <span className="text-7xl font-semibold tracking-tight drop-shadow-lg sm:text-8xl">
+        {formattedTime}
+      </span>
     </Card>
   );
 }

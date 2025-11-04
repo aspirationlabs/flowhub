@@ -8,10 +8,17 @@ import {
 } from '../../providers/systemPreferences';
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => loadSystemPreferences().theme);
+  const [theme, setTheme] = useState<Theme>('light');
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setTheme(loadSystemPreferences().theme);
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const preferences = loadSystemPreferences();
+    setTheme(preferences.theme);
+    setIsReady(true);
   }, []);
 
   useEffect(() => {
@@ -37,5 +44,5 @@ export function useTheme() {
     }
   }, [theme]);
 
-  return { theme, toggleTheme };
+  return { theme, toggleTheme, isReady };
 }

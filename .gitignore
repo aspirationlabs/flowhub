@@ -10,3 +10,5 @@ dist/
 typescript/.next/
 playwright-report/
 test-results/
+
+*.tsbuildinfo
