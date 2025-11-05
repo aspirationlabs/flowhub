@@ -31,13 +31,13 @@ describe('ThemeToggle', () => {
     expect(mockToggleTheme).toHaveBeenCalledTimes(1);
   });
 
-  it('should be positioned in top-right corner', () => {
+  it('should have backdrop blur styling', () => {
     const mockToggleTheme = jest.fn();
     const { container } = render(
       <ThemeToggle theme="light" onToggle={mockToggleTheme} isReady={true} />,
     );
 
     const button = container.querySelector('button');
-    expect(button).toHaveClass('fixed', 'right-6', 'top-6');
+    expect(button).toHaveClass('bg-transparent', 'backdrop-blur');
   });
 });
