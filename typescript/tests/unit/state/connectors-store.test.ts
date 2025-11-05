@@ -86,31 +86,6 @@ describe('ConnectorsStore', () => {
     });
   });
 
-  describe('getConnectedCount', () => {
-    it('should return 0 when no connectors connected', () => {
-      expect(connectorsStore.getConnectedCount()).toBe(0);
-    });
-
-    it('should return count of connected connectors', () => {
-      connectorsStore.connect('example');
-      connectorsStore.connect('anthropic', 'key1');
-      connectorsStore.connect('openai', 'key2');
-
-      expect(connectorsStore.getConnectedCount()).toBe(3);
-    });
-
-    it('should decrease count after disconnect', () => {
-      connectorsStore.connect('example');
-      connectorsStore.connect('anthropic', 'key1');
-
-      expect(connectorsStore.getConnectedCount()).toBe(2);
-
-      connectorsStore.disconnect('example');
-
-      expect(connectorsStore.getConnectedCount()).toBe(1);
-    });
-  });
-
   describe('getSnapshot', () => {
     it('should return current state of all connectors', () => {
       connectorsStore.connect('example');

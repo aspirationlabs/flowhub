@@ -3,7 +3,6 @@ import {
   getAllConnectorStates,
   setConnectorState,
   removeConnectorState,
-  getConnectedCount,
 } from '../storage/connectors/userConnections';
 
 type Listener = () => void;
@@ -47,10 +46,6 @@ class ConnectorsStore {
   disconnect(connectorId: ConnectorId): void {
     removeConnectorState(connectorId);
     this.notify();
-  }
-
-  getConnectedCount(): number {
-    return getConnectedCount();
   }
 }
 

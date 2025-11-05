@@ -4,10 +4,10 @@ import { connectorsStore } from '../state/connectors-store';
 import { getAllConnectors } from '../connectors/registry';
 import { UserConnectorState } from '../types/user-connector-state';
 
-// Cached server snapshot to prevent infinite hydration loops
+// Cached user connections snapshot to prevent infinite hydration loops
 // Must return stable reference for React's useSyncExternalStore
-const SERVER_SNAPSHOT: Partial<Record<ConnectorId, ConnectorState>> = {};
-const getServerSnapshot = () => SERVER_SNAPSHOT;
+const USER_CONNECTIONS_SNAPSHOT: Partial<Record<ConnectorId, ConnectorState>> = {};
+const getUserConnectionsSnapshot = () => USER_CONNECTIONS_SNAPSHOT;
 
 export function useConnectors(): UserConnectorState {
   const subscribe = useMemo(() => connectorsStore.subscribe.bind(connectorsStore), []);
@@ -16,7 +16,11 @@ export function useConnectors(): UserConnectorState {
     [],
   );
 
-  const connectorStates = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const connectorStates = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getUserConnectionsSnapshot,
+  );
 
   const allConnectors = useMemo(() => getAllConnectors(), []);
 
