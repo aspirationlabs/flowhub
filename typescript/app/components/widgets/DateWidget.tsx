@@ -29,7 +29,7 @@ export function DateWidget() {
       className="inline-flex items-center justify-center px-6 py-3"
       data-testid="date-widget"
     >
-      <span className="text-2xl font-light text-slate-900 drop-shadow sm:text-3xl dark:text-white">
+      <span className="text-3xl font-light text-slate-900 drop-shadow sm:text-4xl dark:text-white">
         {formattedDate}
       </span>
     </Card>

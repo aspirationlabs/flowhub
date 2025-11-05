@@ -28,7 +28,7 @@ export function TimeWidget() {
       className="inline-flex items-center justify-center px-6 py-4"
       data-testid="time-widget"
     >
-      <span className="text-7xl font-semibold tracking-tight drop-shadow-lg sm:text-8xl">
+      <span className="text-9xl font-medium tracking-tight drop-shadow-lg sm:text-9xl">
         {formattedTime}
       </span>
     </Card>
