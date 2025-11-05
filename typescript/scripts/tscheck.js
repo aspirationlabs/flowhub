@@ -19,7 +19,7 @@ const run = (command, args, label) => {
         console.error(`${label} exited with code ${code}`);
         reject(new Error(`${label} failed with exit code ${code}`));
       } else {
-        console.log(`✓ ${label} completed successfully`);
+        console.log(`[SUCCESS] ${label} completed successfully`);
         resolve();
       }
     });
@@ -53,10 +53,10 @@ if (files.length > 0) {
 console.log(`Running ${checks.length} checks in parallel...`);
 Promise.all(checks)
   .then(() => {
-    console.log('\n✅ All pre-commit checks passed!');
+    console.log('\nAll pre-commit checks passed!');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('\n❌ Pre-commit checks failed:', error.message);
+    console.error('\nPre-commit checks failed:', error.message);
     process.exit(1);
   });
