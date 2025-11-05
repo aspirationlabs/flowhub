@@ -41,19 +41,6 @@ export function useConnectors() {
     [connectorStates],
   );
 
-  const getState = useMemo(
-    () =>
-      (connectorId: ConnectorId): ConnectorState | undefined => {
-        return connectorStates[connectorId];
-      },
-    [connectorStates],
-  );
-
-  const connectedCount = useMemo(
-    () => connectorsStore.getConnectedCount(),
-    [connectorStates],
-  );
-
   return useMemo(
     () => ({
       allConnectors,
@@ -61,17 +48,7 @@ export function useConnectors() {
       connect,
       disconnect,
       isConnected,
-      getState,
-      connectedCount,
     }),
-    [
-      allConnectors,
-      connectorStates,
-      connect,
-      disconnect,
-      isConnected,
-      getState,
-      connectedCount,
-    ],
+    [allConnectors, connectorStates, connect, disconnect, isConnected],
   );
 }

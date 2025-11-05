@@ -21,14 +21,12 @@ describe('useConnectors', () => {
   it('should update when connector state changes', () => {
     const { result } = renderHook(() => useConnectors());
 
-    const initialConnectedCount = result.current.connectedCount;
-    expect(initialConnectedCount).toBe(0);
+    expect(result.current.isConnected('example')).toBe(false);
 
     act(() => {
       connectorsStore.connect('example');
     });
 
-    expect(result.current.connectedCount).toBe(1);
     expect(result.current.isConnected('example')).toBe(true);
   });
 
@@ -39,7 +37,6 @@ describe('useConnectors', () => {
       result.current.connect('example');
     });
 
-    expect(result.current.connectedCount).toBe(1);
     expect(result.current.isConnected('example')).toBe(true);
   });
 
@@ -59,14 +56,14 @@ describe('useConnectors', () => {
     expect(result.current.isConnected('example')).toBe(false);
   });
 
-  it('should provide getState function', () => {
+  it('should provide connector states', () => {
     const { result } = renderHook(() => useConnectors());
 
     act(() => {
       result.current.connect('example', 'test-key');
     });
 
-    const state = result.current.getState('example');
+    const state = result.current.connectorStates['example'];
     expect(state).toBeDefined();
     expect(state?.status).toBe('connected');
     expect(state?.apiKey).toBe('test-key');

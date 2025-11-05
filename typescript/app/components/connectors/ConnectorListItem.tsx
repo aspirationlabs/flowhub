@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import type { ConnectorDescriptor } from '../../../types/connectors';
 import { Badge } from '../../../components/ui/badge';
-import { Plug } from 'lucide-react';
+import { Plug, PlugZap } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { ConnectorModal } from './ConnectorModal';
 
@@ -21,25 +21,17 @@ export function ConnectorListItem({
   onDisconnect,
 }: ConnectorListItemProps) {
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState<'connect' | 'disconnect'>('connect');
 
   const handleConnectClick = () => {
-    setModalMode('connect');
     setShowModal(true);
   };
 
-  const handlePlugClick = () => {
-    setModalMode('disconnect');
-    setShowModal(true);
+  const handleDisconnectClick = () => {
+    onDisconnect();
   };
 
   const handleConnect = (apiKey?: string) => {
     onConnect(apiKey);
-    setShowModal(false);
-  };
-
-  const handleDisconnect = () => {
-    onDisconnect();
     setShowModal(false);
   };
 
@@ -56,7 +48,10 @@ export function ConnectorListItem({
             <div className="flex items-center gap-2">
               <h3 className="font-medium text-sm">{connector.displayName}</h3>
               {isConnected && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge
+                  variant="secondary"
+                  className="text-xs bg-green-900/30 text-green-700 dark:text-green-400 border-green-900/50"
+                >
                   Connected
                 </Badge>
               )}
@@ -71,35 +66,36 @@ export function ConnectorListItem({
           <Button
             variant="ghost"
             size="sm"
-            onClick={handlePlugClick}
+            onClick={handleDisconnectClick}
             className="h-10 w-10 p-0"
             aria-label={`Disconnect ${connector.displayName}`}
-            aria-haspopup="dialog"
           >
-            <Plug className="h-5 w-5" />
+            <PlugZap className="h-5 w-5" />
             <span className="sr-only">Disconnect</span>
           </Button>
         ) : (
           <Button
-            variant="default"
+            variant="ghost"
             size="sm"
             onClick={handleConnectClick}
+            className="h-10 w-10 p-0"
             aria-label={`Connect ${connector.displayName}`}
+            aria-haspopup="dialog"
           >
-            Connect
+            <Plug className="h-5 w-5" />
+            <span className="sr-only">Connect</span>
           </Button>
         )}
       </div>
 
-      <ConnectorModal
-        connector={connector}
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onConnect={handleConnect}
-        onDisconnect={handleDisconnect}
-        isConnected={isConnected}
-        mode={modalMode}
-      />
+      {!isConnected && (
+        <ConnectorModal
+          connector={connector}
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onConnect={handleConnect}
+        />
+      )}
     </>
   );
 }

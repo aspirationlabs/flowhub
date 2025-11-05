@@ -23,28 +23,4 @@ export const CONNECTOR_CONFIG: Record<string, Partial<ConnectorDescriptor>> = {
     metrics: ['cost', 'count'],
     facets: [],
   },
-  openai: {
-    description: 'GPT API costs and usage breakdown',
-    setupInstructions: [
-      'Go to platform.openai.com',
-      'Navigate to API Keys section',
-      'Create a new API key',
-      'Copy the API key and paste it below',
-    ],
-    requiresApiKey: true,
-    metrics: ['cost', 'count'],
-    facets: [],
-  },
-  openrouter: {
-    description: 'OpenRouter API costs and usage breakdown',
-    setupInstructions: [
-      'Go to openrouter.ai',
-      'Navigate to API Keys',
-      'Create a new API key',
-      'Copy the API key and paste it below',
-    ],
-    requiresApiKey: true,
-    metrics: ['cost', 'count'],
-    facets: [],
-  },
 };

@@ -1,6 +1,5 @@
 import { Bot } from 'lucide-react';
 import type { ConnectorDescriptor } from '../../types/connectors';
-import { registerConnector } from '../registry';
 
 export const exampleConnector: ConnectorDescriptor = {
   id: 'example',
@@ -15,5 +14,3 @@ export const exampleConnector: ConnectorDescriptor = {
   metrics: [],
   facets: [],
 };
-
-registerConnector(exampleConnector);

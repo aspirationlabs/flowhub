@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ThemeToggle } from '../widgets/ThemeToggle';
 import { TimeWidget } from '../widgets/TimeWidget';
 import { DateWidget } from '../widgets/DateWidget';
 import { BackgroundAttribution } from '../widgets/BackgroundAttribution';
 import { useTheme } from '../widgets/hooks/useTheme';
 import { useBackground } from '../widgets/hooks/useBackground';
-import { SettingsButton } from '../SettingsButton';
+import { ConnectorsButton } from '../ConnectorsButton';
 import { ConnectorsProvider } from '../providers/ConnectorsProvider';
 import { useConnectors } from '../../../hooks/useConnectors';
 import { DetailedAnalytics } from '../widgets/DetailedAnalytics';
@@ -17,8 +17,17 @@ import { ChevronDown } from 'lucide-react';
 function DashboardContent() {
   const { theme, toggleTheme, isReady: isThemeReady } = useTheme();
   const { currentBackground, backgroundUrl } = useBackground();
-  const { connectedCount } = useConnectors();
+  const { connectorStates } = useConnectors();
   const detailsRef = useRef<HTMLDivElement>(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  const connectedCount = Object.values(connectorStates).filter(
+    (state) => state.status === 'connected',
+  ).length;
+
+  useEffect(() => {
+    setShowDetails(connectedCount > 0);
+  }, [connectedCount]);
 
   const backgroundStyle = backgroundUrl
     ? {
@@ -47,7 +56,7 @@ function DashboardContent() {
         style={backgroundStyle}
       >
         <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
-          <SettingsButton />
+          <ConnectorsButton />
           <ThemeToggle theme={theme} onToggle={toggleTheme} isReady={isThemeReady} />
         </div>
         <BackgroundAttribution background={currentBackground} />
@@ -59,8 +68,8 @@ function DashboardContent() {
           </div>
         </div>
 
-        {connectedCount > 0 && (
-          <div className="flex justify-center pb-16" suppressHydrationWarning>
+        {showDetails && (
+          <div className="flex justify-center pb-16">
             <Button
               variant="ghost"
               size="sm"
@@ -74,7 +83,7 @@ function DashboardContent() {
         )}
       </div>
 
-      {connectedCount > 0 && (
+      {showDetails && (
         <div
           ref={detailsRef}
           className="relative flex min-h-screen w-full flex-col items-center bg-background pt-24 pb-16"

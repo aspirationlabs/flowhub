@@ -101,6 +101,10 @@ test.describe('Connectors E2E', () => {
     // Wait for disconnect modal to close
     await expect(disconnectHeading).not.toBeVisible();
 
+    // Wait for the sidebar to still be visible (only modal closes)
+    const heading = page.getByRole('heading', { name: /connectors/i });
+    await expect(heading).toBeVisible();
+
     const connectedBadge = page.getByText('Connected');
     await expect(connectedBadge).not.toBeVisible();
 
