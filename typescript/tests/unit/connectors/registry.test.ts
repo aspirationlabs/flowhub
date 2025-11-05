@@ -20,7 +20,6 @@ describe('Connector Registry', () => {
         expect(connector).toHaveProperty('displayName');
         expect(connector).toHaveProperty('description');
         expect(connector).toHaveProperty('setupInstructions');
-        expect(connector).toHaveProperty('icon');
         expect(connector).toHaveProperty('requiresApiKey');
       });
     });

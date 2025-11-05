@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { SYSTEM_PREFERENCES_KEY } from '@/app/components/providers/systemPreferences';
+import { LocalStorageKey } from '@/storage/local/keys';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -51,7 +51,7 @@ test.describe('Theme Toggle E2E', () => {
       } catch {
         return null;
       }
-    }, SYSTEM_PREFERENCES_KEY);
+    }, `flowhub-${LocalStorageKey.SYSTEM_PREFERENCES}`);
     expect(storedTheme).toBe('dark');
 
     const secondPage = await context.newPage();

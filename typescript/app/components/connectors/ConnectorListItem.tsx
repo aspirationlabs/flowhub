@@ -47,7 +47,15 @@ export function ConnectorListItem({
       <div className="flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
         <div className="flex items-center gap-3 flex-1">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-            <ConnectorIcon className="h-5 w-5 text-muted-foreground" />
+            {connector.iconUrl ? (
+              <img
+                src={connector.iconUrl}
+                alt={connector.displayName}
+                className="h-5 w-5"
+              />
+            ) : ConnectorIcon ? (
+              <ConnectorIcon className="h-5 w-5 text-muted-foreground" />
+            ) : null}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">

@@ -61,7 +61,7 @@ describe('userConnections', () => {
     });
 
     it('should not throw when removing non-existent connector', () => {
-      expect(() => removeConnectorState('anthropic')).not.toThrow();
+      expect(() => removeConnectorState('claudecode')).not.toThrow();
     });
   });
 
@@ -78,7 +78,7 @@ describe('userConnections', () => {
         connectedAt: Date.now(),
       };
       const state2: ConnectorState = {
-        id: 'anthropic',
+        id: 'claudecode',
         status: 'disconnected',
       };
 
@@ -88,7 +88,7 @@ describe('userConnections', () => {
       const states = getAllConnectorStates();
       expect(states).toEqual({
         example: state1,
-        anthropic: state2,
+        claudecode: state2,
       });
     });
   });
@@ -105,16 +105,11 @@ describe('userConnections', () => {
         connectedAt: Date.now(),
       });
       setConnectorState({
-        id: 'anthropic',
+        id: 'claudecode',
         status: 'disconnected',
       });
-      setConnectorState({
-        id: 'openai',
-        status: 'connected',
-        connectedAt: Date.now(),
-      });
 
-      expect(getConnectedCount()).toBe(2);
+      expect(getConnectedCount()).toBe(1);
     });
   });
 
@@ -126,7 +121,7 @@ describe('userConnections', () => {
         connectedAt: Date.now(),
       });
       setConnectorState({
-        id: 'anthropic',
+        id: 'claudecode',
         status: 'connected',
         connectedAt: Date.now(),
       });

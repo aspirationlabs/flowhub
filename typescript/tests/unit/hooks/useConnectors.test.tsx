@@ -56,19 +56,6 @@ describe('useConnectors', () => {
     expect(result.current.isConnectorConnected('example')).toBe(false);
   });
 
-  it('should provide connector states', () => {
-    const { result } = renderHook(() => useConnectors());
-
-    act(() => {
-      result.current.connect('example', 'test-key');
-    });
-
-    const state = result.current.getConnectorState('example');
-    expect(state).toBeDefined();
-    expect(state?.status).toBe('connected');
-    expect(state?.apiKey).toBe('test-key');
-  });
-
   it('should return all available connectors', () => {
     const { result } = renderHook(() => useConnectors());
 

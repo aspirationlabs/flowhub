@@ -12,10 +12,6 @@ export class UserConnectorState {
     return this.connectorStates[id]?.status === 'connected';
   }
 
-  getConnectorState(id: ConnectorId): ConnectorState | undefined {
-    return this.connectorStates[id];
-  }
-
   getAllConnectors(): ConnectorDescriptor[] {
     return this.allConnectors;
   }

@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-export type ConnectorId = 'anthropic' | 'openai' | 'openrouter' | 'example';
+export type ConnectorId = 'example' | 'claudecode';
 
 export type MetricKind = 'cost' | 'count';
 
@@ -11,10 +11,12 @@ export interface ConnectorDescriptor {
   displayName: string;
   description: string;
   setupInstructions: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  iconUrl?: string;
   requiresApiKey: boolean;
   metrics: MetricKind[];
   facets: string[];
+  syncPeriodMs?: number;
 }
 
 export interface ConnectorState {
@@ -22,6 +24,9 @@ export interface ConnectorState {
   status: ConnectorStatus;
   connectedAt?: number;
   apiKey?: string;
+  lastSyncedAt?: string;
+  syncStatus?: 'idle' | 'syncing' | 'error';
+  syncError?: string;
 }
 
 export interface UserConnectionsData {

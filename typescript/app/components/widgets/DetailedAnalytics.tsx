@@ -2,6 +2,7 @@
 
 import { useConnectors } from '../../../hooks/useConnectors';
 import { ExampleDetailWidget } from './connectors/ExampleDetailWidget';
+import { ClaudeCodeAnalyticsWidget } from './connectors/ClaudeCodeAnalyticsWidget';
 
 export function DetailedAnalytics() {
   const connectorState = useConnectors();
@@ -25,6 +26,7 @@ export function DetailedAnalytics() {
           {connectedConnectors.map((connector) => (
             <div key={connector.id}>
               {connector.id === 'example' && <ExampleDetailWidget />}
+              {connector.id === 'claudecode' && <ClaudeCodeAnalyticsWidget />}
             </div>
           ))}
         </div>
