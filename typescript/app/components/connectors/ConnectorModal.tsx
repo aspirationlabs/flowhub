@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import type { ConnectorDescriptor } from '../../../types/connectors';
 import {
   Dialog,
@@ -17,6 +18,8 @@ interface ConnectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConnect: (apiKey?: string) => void;
+  onDisconnect?: () => void;
+  isConnected?: boolean;
 }
 
 export function ConnectorModal({
@@ -24,8 +27,35 @@ export function ConnectorModal({
   isOpen,
   onClose,
   onConnect,
+  onDisconnect,
+  isConnected = false,
 }: ConnectorModalProps) {
   const [apiKey, setApiKey] = useState('');
+  const [instructions, setInstructions] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadInstructions() {
+      try {
+        setLoading(true);
+        const response = await fetch(`/${connector.setupInstructions}`);
+        const text = await response.text();
+        setInstructions(text);
+      } catch (error) {
+        console.error('Failed to load instructions:', error);
+        setInstructions('Failed to load setup instructions.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (isOpen && !isConnected) {
+      loadInstructions();
+    } else {
+      setApiKey('');
+      setInstructions('');
+    }
+  }, [connector.setupInstructions, isOpen, isConnected]);
 
   const handleConnect = () => {
     if (connector.requiresApiKey && !apiKey) {
@@ -33,6 +63,31 @@ export function ConnectorModal({
     }
     onConnect(apiKey || undefined);
   };
+
+  const handleDisconnect = () => {
+    onDisconnect?.();
+  };
+
+  if (isConnected) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Disconnect {connector.displayName}</DialogTitle>
+            <DialogDescription>You can reconnect anytime.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="default" onClick={handleDisconnect}>
+              Disconnect
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -45,15 +100,12 @@ export function ConnectorModal({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium">Instructions:</h4>
-            <ol className="list-decimal list-inside space-y-1">
-              {connector.setupInstructions.map((instruction, index) => (
-                <li key={index} className="text-sm text-muted-foreground">
-                  {instruction}
-                </li>
-              ))}
-            </ol>
+          <div className="space-y-2 prose prose-sm dark:prose-invert max-w-none">
+            {loading ? (
+              <p className="text-sm text-muted-foreground">Loading instructions...</p>
+            ) : (
+              <ReactMarkdown>{instructions}</ReactMarkdown>
+            )}
           </div>
 
           {connector.requiresApiKey && (

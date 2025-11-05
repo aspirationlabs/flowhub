@@ -35,11 +35,6 @@ function setStorageData(data: UserConnectionsData): void {
   }
 }
 
-export function getConnectorState(connectorId: ConnectorId): ConnectorState | null {
-  const data = getStorageData();
-  return data.connections[connectorId] || null;
-}
-
 export function setConnectorState(state: ConnectorState): void {
   const data = getStorageData();
   data.connections[state.id] = state;
@@ -57,11 +52,6 @@ export function removeConnectorState(connectorId: ConnectorId): void {
 export function getAllConnectorStates(): Partial<Record<ConnectorId, ConnectorState>> {
   const data = getStorageData();
   return data.connections;
-}
-
-export function isConnectorConnected(connectorId: ConnectorId): boolean {
-  const state = getConnectorState(connectorId);
-  return state?.status === 'connected';
 }
 
 export function getConnectedCount(): number {

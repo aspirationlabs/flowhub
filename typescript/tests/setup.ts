@@ -1,5 +1,18 @@
 import '@testing-library/jest-dom';
 
+jest.mock('react-markdown', () => ({
+  __esModule: true,
+  default: ({ children }: { children: string }) => children,
+}));
+
+beforeAll(() => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      text: () => Promise.resolve('# Setup Instructions'),
+    }),
+  ) as unknown as typeof fetch;
+});
+
 const storageMock: Record<string, unknown> = {};
 
 global.chrome = {
@@ -46,4 +59,5 @@ beforeEach(() => {
   (global.chrome.storage.sync.set as jest.Mock).mockClear();
   window.localStorage.clear();
   document.documentElement.className = '';
+  (global.fetch as jest.Mock).mockClear();
 });

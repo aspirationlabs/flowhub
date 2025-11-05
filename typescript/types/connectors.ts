@@ -16,7 +16,7 @@ export interface ConnectorDescriptor {
   id: ConnectorId;
   displayName: string;
   description: string;
-  setupInstructions: string[];
+  setupInstructions: string;
   icon: LucideIcon;
   requiresApiKey: boolean;
   metrics: MetricKind[];

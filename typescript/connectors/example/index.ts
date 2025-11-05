@@ -5,10 +5,7 @@ export const exampleConnector: ConnectorDescriptor = {
   id: 'example',
   displayName: 'Example',
   description: 'Example connector for demonstration purposes',
-  setupInstructions: [
-    'Toggle the switch to connect',
-    'No API key required for this example connector',
-  ],
+  setupInstructions: 'instructions/example.md',
   icon: Bot,
   requiresApiKey: false,
   metrics: [],

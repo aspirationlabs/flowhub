@@ -17,7 +17,7 @@ interface ConnectorsSidebarProps {
 }
 
 export function ConnectorsSidebar({ isOpen, onClose }: ConnectorsSidebarProps) {
-  const { allConnectors, isConnected, connect, disconnect } = useConnectors();
+  const connectorState = useConnectors();
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -33,13 +33,13 @@ export function ConnectorsSidebar({ isOpen, onClose }: ConnectorsSidebarProps) {
 
         <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
           <div className="space-y-2">
-            {allConnectors.map((connector) => (
+            {connectorState.getAllConnectors().map((connector) => (
               <ConnectorListItem
                 key={connector.id}
                 connector={connector}
-                isConnected={isConnected(connector.id)}
-                onConnect={(apiKey) => connect(connector.id, apiKey)}
-                onDisconnect={() => disconnect(connector.id)}
+                isConnected={connectorState.isConnectorConnected(connector.id)}
+                onConnect={(apiKey) => connectorState.connect(connector.id, apiKey)}
+                onDisconnect={() => connectorState.disconnect(connector.id)}
               />
             ))}
           </div>

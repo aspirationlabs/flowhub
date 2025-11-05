@@ -21,13 +21,13 @@ describe('useConnectors', () => {
   it('should update when connector state changes', () => {
     const { result } = renderHook(() => useConnectors());
 
-    expect(result.current.isConnected('example')).toBe(false);
+    expect(result.current.isConnectorConnected('example')).toBe(false);
 
     act(() => {
       connectorsStore.connect('example');
     });
 
-    expect(result.current.isConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected('example')).toBe(true);
   });
 
   it('should provide connect function', () => {
@@ -37,7 +37,7 @@ describe('useConnectors', () => {
       result.current.connect('example');
     });
 
-    expect(result.current.isConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected('example')).toBe(true);
   });
 
   it('should provide disconnect function', () => {
@@ -47,13 +47,13 @@ describe('useConnectors', () => {
       result.current.connect('example');
     });
 
-    expect(result.current.isConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected('example')).toBe(true);
 
     act(() => {
       result.current.disconnect('example');
     });
 
-    expect(result.current.isConnected('example')).toBe(false);
+    expect(result.current.isConnectorConnected('example')).toBe(false);
   });
 
   it('should provide connector states', () => {
@@ -63,7 +63,7 @@ describe('useConnectors', () => {
       result.current.connect('example', 'test-key');
     });
 
-    const state = result.current.connectorStates['example'];
+    const state = result.current.getConnectorState('example');
     expect(state).toBeDefined();
     expect(state?.status).toBe('connected');
     expect(state?.apiKey).toBe('test-key');
@@ -72,8 +72,9 @@ describe('useConnectors', () => {
   it('should return all available connectors', () => {
     const { result } = renderHook(() => useConnectors());
 
-    expect(result.current.allConnectors).toBeDefined();
-    expect(Array.isArray(result.current.allConnectors)).toBe(true);
+    const allConnectors = result.current.getAllConnectors();
+    expect(allConnectors).toBeDefined();
+    expect(Array.isArray(allConnectors)).toBe(true);
   });
 
   it('should maintain stable callback references', () => {

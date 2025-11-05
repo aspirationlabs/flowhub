@@ -4,9 +4,11 @@ import { useConnectors } from '../../../hooks/useConnectors';
 import { ExampleDetailWidget } from './connectors/ExampleDetailWidget';
 
 export function DetailedAnalytics() {
-  const { allConnectors, isConnected } = useConnectors();
+  const connectorState = useConnectors();
 
-  const connectedConnectors = allConnectors.filter((c) => isConnected(c.id));
+  const connectedConnectors = connectorState
+    .getAllConnectors()
+    .filter((c) => connectorState.isConnectorConnected(c.id));
 
   if (connectedConnectors.length === 0) {
     return null;

@@ -1,9 +1,7 @@
 import {
-  getConnectorState,
   setConnectorState,
   removeConnectorState,
   getAllConnectorStates,
-  isConnectorConnected,
   getConnectedCount,
   clearAllConnections,
 } from '../../../storage/connectors/userConnections';
@@ -14,8 +12,8 @@ describe('userConnections', () => {
     localStorage.clear();
   });
 
-  describe('setConnectorState and getConnectorState', () => {
-    it('should store and retrieve connector state', () => {
+  describe('setConnectorState', () => {
+    it('should store connector state', () => {
       const state: ConnectorState = {
         id: 'example',
         status: 'connected',
@@ -23,14 +21,9 @@ describe('userConnections', () => {
       };
 
       setConnectorState(state);
-      const retrieved = getConnectorState('example');
+      const allStates = getAllConnectorStates();
 
-      expect(retrieved).toEqual(state);
-    });
-
-    it('should return null for non-existent connector', () => {
-      const retrieved = getConnectorState('anthropic');
-      expect(retrieved).toBeNull();
+      expect(allStates['example']).toEqual(state);
     });
 
     it('should update existing connector state', () => {
@@ -47,8 +40,8 @@ describe('userConnections', () => {
       };
       setConnectorState(state2);
 
-      const retrieved = getConnectorState('example');
-      expect(retrieved).toEqual(state2);
+      const allStates = getAllConnectorStates();
+      expect(allStates['example']).toEqual(state2);
     });
   });
 
@@ -61,10 +54,10 @@ describe('userConnections', () => {
       };
 
       setConnectorState(state);
-      expect(getConnectorState('example')).toEqual(state);
+      expect(getAllConnectorStates()['example']).toEqual(state);
 
       removeConnectorState('example');
-      expect(getConnectorState('example')).toBeNull();
+      expect(getAllConnectorStates()['example']).toBeUndefined();
     });
 
     it('should not throw when removing non-existent connector', () => {
@@ -97,33 +90,6 @@ describe('userConnections', () => {
         example: state1,
         anthropic: state2,
       });
-    });
-  });
-
-  describe('isConnectorConnected', () => {
-    it('should return true for connected connector', () => {
-      const state: ConnectorState = {
-        id: 'example',
-        status: 'connected',
-        connectedAt: Date.now(),
-      };
-      setConnectorState(state);
-
-      expect(isConnectorConnected('example')).toBe(true);
-    });
-
-    it('should return false for disconnected connector', () => {
-      const state: ConnectorState = {
-        id: 'example',
-        status: 'disconnected',
-      };
-      setConnectorState(state);
-
-      expect(isConnectorConnected('example')).toBe(false);
-    });
-
-    it('should return false for non-existent connector', () => {
-      expect(isConnectorConnected('anthropic')).toBe(false);
     });
   });
 

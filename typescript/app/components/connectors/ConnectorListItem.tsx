@@ -27,11 +27,16 @@ export function ConnectorListItem({
   };
 
   const handleDisconnectClick = () => {
-    onDisconnect();
+    setShowModal(true);
   };
 
   const handleConnect = (apiKey?: string) => {
     onConnect(apiKey);
+    setShowModal(false);
+  };
+
+  const handleDisconnect = () => {
+    onDisconnect();
     setShowModal(false);
   };
 
@@ -69,6 +74,7 @@ export function ConnectorListItem({
             onClick={handleDisconnectClick}
             className="h-10 w-10 p-0"
             aria-label={`Disconnect ${connector.displayName}`}
+            aria-haspopup="dialog"
           >
             <PlugZap className="h-5 w-5" />
             <span className="sr-only">Disconnect</span>
@@ -88,14 +94,14 @@ export function ConnectorListItem({
         )}
       </div>
 
-      {!isConnected && (
-        <ConnectorModal
-          connector={connector}
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onConnect={handleConnect}
-        />
-      )}
+      <ConnectorModal
+        connector={connector}
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConnect={handleConnect}
+        onDisconnect={handleDisconnect}
+        isConnected={isConnected}
+      />
     </>
   );
 }

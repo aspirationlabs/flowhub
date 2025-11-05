@@ -2,13 +2,14 @@ import { useSyncExternalStore, useMemo } from 'react';
 import type { ConnectorId, ConnectorState } from '../types/connectors';
 import { connectorsStore } from '../state/connectors-store';
 import { getAllConnectors } from '../connectors/registry';
+import { UserConnectorState } from '../types/user-connector-state';
 
 // Cached server snapshot to prevent infinite hydration loops
 // Must return stable reference for React's useSyncExternalStore
 const SERVER_SNAPSHOT: Partial<Record<ConnectorId, ConnectorState>> = {};
 const getServerSnapshot = () => SERVER_SNAPSHOT;
 
-export function useConnectors() {
+export function useConnectors(): UserConnectorState {
   const subscribe = useMemo(() => connectorsStore.subscribe.bind(connectorsStore), []);
   const getSnapshot = useMemo(
     () => connectorsStore.getSnapshot.bind(connectorsStore),
@@ -33,22 +34,8 @@ export function useConnectors() {
     [],
   );
 
-  const isConnected = useMemo(
-    () =>
-      (connectorId: ConnectorId): boolean => {
-        return connectorStates[connectorId]?.status === 'connected';
-      },
-    [connectorStates],
-  );
-
   return useMemo(
-    () => ({
-      allConnectors,
-      connectorStates,
-      connect,
-      disconnect,
-      isConnected,
-    }),
-    [allConnectors, connectorStates, connect, disconnect, isConnected],
+    () => new UserConnectorState(connectorStates, allConnectors, connect, disconnect),
+    [connectorStates, allConnectors, connect, disconnect],
   );
 }

@@ -11,7 +11,7 @@ function createConnector(
     id: 'openai',
     displayName: 'OpenAI',
     description: 'Test connector',
-    setupInstructions: ['Do a thing'],
+    setupInstructions: 'instructions/test.md',
     requiresApiKey: true,
     icon: Bot,
     metrics: [],
@@ -21,7 +21,7 @@ function createConnector(
 }
 
 describe('ConnectorListItem', () => {
-  test('forwards api key collected from modal to onConnect', () => {
+  test('forwards api key collected from modal to onConnect', async () => {
     const onConnect = jest.fn();
     const onDisconnect = jest.fn();
 
@@ -37,16 +37,17 @@ describe('ConnectorListItem', () => {
     const connectButton = screen.getByRole('button', { name: /connect openai/i });
     fireEvent.click(connectButton);
 
-    const apiKeyInput = screen.getByLabelText(/openai admin api key/i);
+    const apiKeyInput = await screen.findByLabelText(/openai admin api key/i);
     fireEvent.change(apiKeyInput, { target: { value: 'sk-test-123' } });
 
-    fireEvent.click(screen.getByRole('button', { name: /^connect$/i }));
+    const confirmConnect = await screen.findByRole('button', { name: /^connect$/i });
+    fireEvent.click(confirmConnect);
 
     expect(onConnect).toHaveBeenCalledWith('sk-test-123');
     expect(onDisconnect).not.toHaveBeenCalled();
   });
 
-  test('triggers onConnect without api key for keyless connectors', () => {
+  test('triggers onConnect without api key for keyless connectors', async () => {
     const onConnect = jest.fn();
     const onDisconnect = jest.fn();
 
@@ -62,7 +63,8 @@ describe('ConnectorListItem', () => {
     const connectButton = screen.getByRole('button', { name: /connect openai/i });
     fireEvent.click(connectButton);
 
-    fireEvent.click(screen.getByRole('button', { name: /^connect$/i }));
+    const confirmConnect = await screen.findByRole('button', { name: /^connect$/i });
+    fireEvent.click(confirmConnect);
 
     expect(onConnect).toHaveBeenCalledWith(undefined);
     expect(onDisconnect).not.toHaveBeenCalled();
@@ -83,5 +85,32 @@ describe('ConnectorListItem', () => {
 
     const plugButton = screen.getByRole('button', { name: /disconnect openai/i });
     expect(plugButton).toBeInTheDocument();
+  });
+
+  test('confirms before calling onDisconnect for connected connector', () => {
+    const onConnect = jest.fn();
+    const onDisconnect = jest.fn();
+
+    render(
+      <ConnectorListItem
+        connector={createConnector()}
+        isConnected={true}
+        onConnect={onConnect}
+        onDisconnect={onDisconnect}
+      />,
+    );
+
+    const plugButton = screen.getByRole('button', { name: /disconnect openai/i });
+    fireEvent.click(plugButton);
+
+    expect(onDisconnect).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('heading', { name: /disconnect openai/i }),
+    ).toBeInTheDocument();
+
+    const confirmButton = screen.getByRole('button', { name: /^disconnect$/i });
+    fireEvent.click(confirmButton);
+
+    expect(onDisconnect).toHaveBeenCalledTimes(1);
   });
 });

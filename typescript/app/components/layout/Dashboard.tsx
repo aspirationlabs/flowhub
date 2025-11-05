@@ -17,11 +17,11 @@ import { ChevronDown } from 'lucide-react';
 function DashboardContent() {
   const { theme, toggleTheme, isReady: isThemeReady } = useTheme();
   const { currentBackground, backgroundUrl } = useBackground();
-  const { connectorStates } = useConnectors();
+  const connectorState = useConnectors();
   const detailsRef = useRef<HTMLDivElement>(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const connectedCount = Object.values(connectorStates).filter(
+  const connectedCount = Object.values(connectorState.getConnectorStates()).filter(
     (state) => state.status === 'connected',
   ).length;
 
@@ -52,7 +52,7 @@ function DashboardContent() {
   return (
     <>
       <div
-        className="relative flex min-h-screen w-full flex-col bg-background"
+        className="relative flex min-h-screen w-full flex-col bg-background overflow-hidden"
         style={backgroundStyle}
       >
         <div className="fixed top-4 right-4 flex items-center gap-2 z-10">
@@ -61,7 +61,7 @@ function DashboardContent() {
         </div>
         <BackgroundAttribution background={currentBackground} />
 
-        <div className="flex flex-1 flex-col items-center justify-center px-6 pt-24 sm:px-8">
+        <div className="absolute inset-0 flex items-center justify-center px-6">
           <div className="flex flex-col items-center gap-4">
             <TimeWidget />
             <DateWidget />
@@ -69,7 +69,7 @@ function DashboardContent() {
         </div>
 
         {showDetails && (
-          <div className="flex justify-center pb-16">
+          <div className="absolute bottom-16 left-0 right-0 flex justify-center">
             <Button
               variant="ghost"
               size="sm"

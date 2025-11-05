@@ -81,8 +81,14 @@ test.describe('Connectors E2E', () => {
     const connectButton = page.getByRole('button', { name: /connect example/i });
     await connectButton.click();
 
+    const modalHeading = page.getByRole('heading', { name: /configure example/i });
+    await expect(modalHeading).toBeVisible();
+
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
+
+    // Wait for connect modal to close
+    await expect(modalHeading).not.toBeVisible();
 
     const plugButton = page.getByRole('button', { name: /disconnect example/i });
     await expect(plugButton).toBeVisible();
@@ -166,14 +172,12 @@ test.describe('Connectors E2E', () => {
     await expect(connectedBadge).toBeVisible();
   });
 
-  test('should update settings button aria-label with connection count', async ({
-    page,
-  }) => {
+  test('should update settings button aria-label', async ({ page }) => {
     await loadPage(page);
 
     const settingsButton = page.getByRole('button', { name: /settings/i });
     const initialLabel = await settingsButton.getAttribute('aria-label');
-    expect(initialLabel).toBe('Settings');
+    expect(initialLabel).toBe('Connector Settings');
 
     await settingsButton.click();
 
@@ -187,8 +191,10 @@ test.describe('Connectors E2E', () => {
     await closeButton.click();
 
     const updatedButton = page.getByRole('button', {
-      name: /settings - 1 connector connected/i,
+      name: /settings/i,
     });
     await expect(updatedButton).toBeVisible();
+    const updatedLabel = await updatedButton.getAttribute('aria-label');
+    expect(updatedLabel).toBe('Connector Settings');
   });
 });

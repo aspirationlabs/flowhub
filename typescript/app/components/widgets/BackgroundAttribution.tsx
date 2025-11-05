@@ -22,7 +22,7 @@ export function BackgroundAttribution({ background }: BackgroundAttributionProps
   const ariaLabel = `View source: ${background.description || 'background image'}`;
 
   return (
-    <div className="fixed left-6 bottom-6">
+    <div className="fixed left-6 bottom-6 z-10">
       <OverlayIconButton icon={Image} onClick={handleClick} aria-label={ariaLabel} />
     </div>
   );
