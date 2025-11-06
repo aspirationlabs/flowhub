@@ -122,29 +122,34 @@ export function ClaudeCodeAnalyticsWidget() {
   };
 
   return (
-    <Card className="bg-card/30 border-card/50 backdrop-blur-md">
+    <Card className="bg-card/30 border-card/50 backdrop-blur-md text-foreground">
       <CardHeader>
         <CardTitle>Claude Code Usage</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="text-foreground">
         {syncing && (
           <div className="flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Syncing Claude Code usage...</span>
+            <Loader2 className="h-4 w-4 animate-spin text-foreground" />
+            <span className="text-sm font-medium">Syncing Claude Code usage...</span>
           </div>
         )}
 
         {error && (
-          <div className="space-y-2">
-            <div className="text-red-500">Error: {error}</div>
-            <Button onClick={checkAndSync} size="sm" variant="outline">
+          <div className="space-y-2 text-sm text-foreground">
+            <div className="text-red-400 font-medium">Error: {error}</div>
+            <Button
+              onClick={checkAndSync}
+              size="sm"
+              variant="outline"
+              className="text-foreground"
+            >
               Retry
             </Button>
           </div>
         )}
 
         {!syncing && !error && (
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm font-medium text-foreground">
             Data last synced at{' '}
             {lastSynced ? new Date(lastSynced).toLocaleString() : 'Never'}
           </div>

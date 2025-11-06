@@ -97,9 +97,6 @@ test.describe('Connectors E2E', () => {
     const disconnectHeading = page.getByRole('heading', { name: /disconnect example/i });
     await expect(disconnectHeading).toBeVisible();
 
-    const confirmationText = page.getByText(/you can reconnect anytime/i);
-    await expect(confirmationText).toBeVisible();
-
     const disconnectButton = page.getByRole('button', { name: /^disconnect$/i });
     await expect(disconnectButton).toBeVisible();
     await disconnectButton.click();

@@ -13,7 +13,7 @@ export class UserConnectorState {
   }
 
   getAllConnectors(): ConnectorDescriptor[] {
-    return this.allConnectors;
+    return this.allConnectors.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   getConnectorStates(): Partial<Record<ConnectorId, ConnectorState>> {

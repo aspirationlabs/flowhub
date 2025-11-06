@@ -74,7 +74,7 @@ function DashboardContent() {
               variant="ghost"
               size="sm"
               onClick={scrollToDetails}
-              className="text-muted-foreground hover:text-foreground"
+              className="hover:text-foreground"
             >
               Details
               <ChevronDown className="ml-2 h-4 w-4" />
