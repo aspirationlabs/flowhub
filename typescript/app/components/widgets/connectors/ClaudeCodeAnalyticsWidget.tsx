@@ -20,13 +20,6 @@ export function ClaudeCodeAnalyticsWidget() {
     void checkAndSync();
   }, []);
 
-  const isExtensionRuntime = () =>
-    typeof window !== 'undefined' &&
-    (window.location.protocol === 'chrome-extension:' ||
-      Boolean(
-        (globalThis as { chrome?: { runtime?: { id?: string } } }).chrome?.runtime?.id,
-      ));
-
   const calculateDateRange = () => {
     const today = new Date();
     const thirtyDaysAgo = new Date();
@@ -46,27 +39,13 @@ export function ClaudeCodeAnalyticsWidget() {
   };
 
   const fetchUsageData = async (dateRange: { since: string; until: string }) => {
-    if (isExtensionRuntime()) {
-      const client = new MCPClient();
-      const rawData = await client.getDailyUsage(dateRange.since, dateRange.until);
-      const data = DailyResponseSchema.parse(rawData);
-
-      return {
-        data,
-        syncedAt: new Date().toISOString(),
-      };
-    }
-
-    const response = await fetch('/api/usage/claudecode');
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || 'Failed to sync');
-    }
+    const client = new MCPClient();
+    const rawData = await client.getDailyUsage(dateRange.since, dateRange.until);
+    const data = DailyResponseSchema.parse(rawData);
 
     return {
-      data: DailyResponseSchema.parse(result.data),
-      syncedAt: result.syncedAt ?? new Date().toISOString(),
+      data,
+      syncedAt: new Date().toISOString(),
     };
   };
 

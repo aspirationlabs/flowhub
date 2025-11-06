@@ -60,10 +60,8 @@ export class MCPClient {
   }
 
   async getDailyUsage<T = unknown>(since: string, until: string): Promise<T> {
-    // Ensure we're initialized
     await this.initialize();
 
-    // Call the 'daily' tool
     const response = await this.sendRequest<ToolCallResult>('tools/call', {
       name: 'daily',
       arguments: {
