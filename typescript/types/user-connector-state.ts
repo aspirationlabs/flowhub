@@ -12,12 +12,8 @@ export class UserConnectorState {
     return this.connectorStates[id]?.status === 'connected';
   }
 
-  getConnectorState(id: ConnectorId): ConnectorState | undefined {
-    return this.connectorStates[id];
-  }
-
   getAllConnectors(): ConnectorDescriptor[] {
-    return this.allConnectors;
+    return this.allConnectors.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   getConnectorStates(): Partial<Record<ConnectorId, ConnectorState>> {

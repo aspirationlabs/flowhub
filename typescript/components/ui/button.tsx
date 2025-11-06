@@ -10,7 +10,7 @@ const baseClasses =
 const variantClasses: Record<ButtonVariant, string> = {
   default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
   outline: 'border border-input bg-background text-foreground hover:bg-muted',
-  ghost: 'text-muted-foreground hover:bg-muted hover:text-foreground',
+  ghost: 'hover:bg-muted hover:text-foreground',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

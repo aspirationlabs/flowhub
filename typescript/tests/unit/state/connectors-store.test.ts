@@ -54,11 +54,11 @@ describe('ConnectorsStore', () => {
 
     it('should connect a connector with API key', () => {
       const apiKey = 'test-api-key-123';
-      connectorsStore.connect('anthropic', apiKey);
+      connectorsStore.connect('claudecode', apiKey);
 
       const snapshot = connectorsStore.getSnapshot();
-      expect(snapshot.anthropic).toBeDefined();
-      expect(snapshot.anthropic?.apiKey).toBe(apiKey);
+      expect(snapshot.claudecode).toBeDefined();
+      expect(snapshot.claudecode?.apiKey).toBe(apiKey);
     });
 
     it('should set connectedAt timestamp', () => {
@@ -82,19 +82,19 @@ describe('ConnectorsStore', () => {
     });
 
     it('should not throw when disconnecting non-existent connector', () => {
-      expect(() => connectorsStore.disconnect('anthropic')).not.toThrow();
+      expect(() => connectorsStore.disconnect('claudecode')).not.toThrow();
     });
   });
 
   describe('getSnapshot', () => {
     it('should return current state of all connectors', () => {
       connectorsStore.connect('example');
-      connectorsStore.connect('anthropic', 'key1');
+      connectorsStore.connect('claudecode', 'key1');
 
       const snapshot = connectorsStore.getSnapshot();
 
       expect(Object.keys(snapshot)).toContain('example');
-      expect(Object.keys(snapshot)).toContain('anthropic');
+      expect(Object.keys(snapshot)).toContain('claudecode');
     });
 
     it('should return stable reference when data unchanged', () => {

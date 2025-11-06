@@ -16,9 +16,11 @@ export function useTheme() {
       return;
     }
 
-    const preferences = loadSystemPreferences();
-    setTheme(preferences.theme);
-    setIsReady(true);
+    void (async () => {
+      const preferences = await loadSystemPreferences();
+      setTheme(preferences.theme);
+      setIsReady(true);
+    })();
   }, []);
 
   useEffect(() => {
@@ -30,13 +32,13 @@ export function useTheme() {
     root.classList.toggle('dark', theme === 'dark');
   }, [theme]);
 
-  const toggleTheme = useCallback(() => {
+  const toggleTheme = useCallback(async () => {
     const previousTheme = theme;
     const newTheme: Theme = previousTheme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
 
     try {
-      saveSystemPreferences({ theme: newTheme });
+      await saveSystemPreferences({ theme: newTheme });
     } catch (error) {
       console.error('Failed to save theme preference.', { error });
       setTheme(previousTheme);

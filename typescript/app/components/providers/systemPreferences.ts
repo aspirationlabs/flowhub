@@ -1,29 +1,25 @@
 'use client';
 
 import { Theme } from '@/types/theme';
+import { z } from 'zod';
+import { createKeyValueStore } from '../../../storage/local/keyValueStore';
+import type { StorageErrorPayload } from '../../../storage/local/adapter';
+import { isParseError, isSerializationError } from '../../../storage/local/adapter';
+import { LocalStorageKey } from '../../../storage/local/keys';
 
 export type SystemPreferences = {
   theme: Theme;
 };
 
-export const SYSTEM_PREFERENCES_KEY = 'flowhub-system-preferences';
-
 const DEFAULT_PREFERENCES: SystemPreferences = {
   theme: 'light',
 };
 
-function getStorage(): Storage | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  try {
-    return window.localStorage;
-  } catch (error) {
-    console.warn('Local storage unavailable; using defaults.', error);
-    return null;
-  }
-}
+const SystemPreferencesSchema = z.object({
+  theme: z.custom<Theme>(
+    (value): value is Theme => value === 'light' || value === 'dark',
+  ),
+});
 
 function mergePreferences(partial: Partial<SystemPreferences>): SystemPreferences {
   return {
@@ -49,41 +45,37 @@ function resolveFallbackPreferences(): SystemPreferences {
   return mergePreferences({ theme: resolveSystemTheme() });
 }
 
-function readStoredPreferences(): Partial<SystemPreferences> | null {
-  const storage = getStorage();
-  if (!storage) {
-    return null;
-  }
-
-  let storedValue: string | null;
+async function readStoredPreferences(): Promise<Partial<SystemPreferences> | null> {
+  const store = createKeyValueStore<Partial<SystemPreferences>>(
+    LocalStorageKey.SYSTEM_PREFERENCES,
+  );
   try {
-    storedValue = storage.getItem(SYSTEM_PREFERENCES_KEY);
+    const stored = await store.get(SystemPreferencesSchema.partial());
+    return stored ?? null;
   } catch (error) {
-    console.warn(
-      'Failed to read system preferences from storage, falling back to defaults.',
-      error,
-    );
-    return null;
-  }
-
-  if (!storedValue) {
-    return null;
-  }
-
-  try {
-    const parsed = JSON.parse(storedValue) as Partial<SystemPreferences>;
-    return parsed;
-  } catch (error) {
-    console.warn('Failed to parse system preferences, falling back to defaults.', {
-      error,
-      storedValue,
-    });
+    const payload = error as StorageErrorPayload;
+    if (isParseError(payload)) {
+      console.warn('Failed to parse system preferences, falling back to defaults.', {
+        error: payload.cause ?? error,
+        storedValue: payload.storedValue,
+      });
+      try {
+        await store.remove();
+      } catch (removeError) {
+        console.warn('Failed to clear invalid system preferences entry.', removeError);
+      }
+    } else {
+      console.warn(
+        'Failed to read system preferences from storage, falling back to defaults.',
+        error,
+      );
+    }
     return null;
   }
 }
 
-export function loadSystemPreferences(): SystemPreferences {
-  const stored = readStoredPreferences();
+export async function loadSystemPreferences(): Promise<SystemPreferences> {
+  const stored = await readStoredPreferences();
   if (!stored) {
     const fallback = resolveFallbackPreferences();
     console.info('No stored system preferences found; using defaults.', { fallback });
@@ -93,32 +85,27 @@ export function loadSystemPreferences(): SystemPreferences {
   return mergePreferences(stored);
 }
 
-export function saveSystemPreferences(
+export async function saveSystemPreferences(
   update: Partial<SystemPreferences>,
-): SystemPreferences {
-  const storage = getStorage();
-  const current = storage ? loadSystemPreferences() : resolveFallbackPreferences();
+): Promise<SystemPreferences> {
+  const current = await loadSystemPreferences();
   const merged = mergePreferences({
     ...current,
     ...update,
   });
-
-  if (!storage) {
-    return merged;
-  }
-
+  const store = createKeyValueStore<SystemPreferences>(
+    LocalStorageKey.SYSTEM_PREFERENCES,
+  );
   try {
-    const payload = JSON.stringify(merged);
-    storage.setItem(SYSTEM_PREFERENCES_KEY, payload);
+    await store.set(merged);
+    return merged;
   } catch (error) {
+    const payload = error as StorageErrorPayload;
+    const cause = isSerializationError(payload) ? (payload.cause ?? error) : error;
     console.error('Failed to persist system preferences.', {
-      error,
+      error: cause,
       payload: merged,
     });
-    throw new Error('Failed to persist system preferences.', {
-      cause: error instanceof Error ? error : undefined,
-    });
+    throw new Error('Failed to persist system preferences.');
   }
-
-  return merged;
 }

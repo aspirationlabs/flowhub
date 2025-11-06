@@ -11,7 +11,9 @@
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "dev": "next dev",
-    "build": "pnpm run generate-icons && next build && pnpm run export-extension",
+    "build": "pnpm run generate-icons && pnpm run build:web && pnpm run build:extension",
+    "build:web": "next build --webpack",
+    "build:extension": "FLOWHUB_BUILD_TARGET=extension next build --webpack && FLOWHUB_BUILD_TARGET=extension pnpm run export-extension",
     "generate-icons": "node typescript/scripts/generate-icons.mjs",
     "export-extension": "node typescript/scripts/export-extension.mjs",
     "fetch-backgrounds": "node typescript/scripts/fetch-backgrounds.mjs"
