@@ -32,39 +32,46 @@ jobs:
       - name: Get pnpm store directory
         shell: bash
         run: |
+          cd typescript
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Cache pnpm dependencies
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('typescript/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
         run: |
+          cd typescript
           pnpm install --frozen-lockfile
 
       - name: Lint
         run: |
+          cd typescript
           pnpm run lint
 
       - name: Run unit tests
         run: |
+          cd typescript
           pnpm run test
 
       - name: Build frontend
         run: |
+          cd typescript
           pnpm run build
         timeout-minutes: 10
 
       - name: Install Playwright browsers
         run: |
+          cd typescript
           pnpm exec playwright install --with-deps chromium
 
       - name: Run e2e tests
         run: |
+          cd typescript
           SKIP_EXTENSION=1 pnpm run test:e2e
         timeout-minutes: 10
         env:

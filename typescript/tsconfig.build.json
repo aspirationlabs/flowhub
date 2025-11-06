@@ -13,6 +13,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["typescript/**/*.ts", "typescript/**/*.tsx"],
-  "exclude": ["node_modules", "dist", "typescript/tests"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", "tests"]
 }

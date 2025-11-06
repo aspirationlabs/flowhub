@@ -12,9 +12,9 @@
     "test:e2e": "playwright test",
     "dev": "next dev",
     "build": "pnpm run generate-icons && next build && pnpm run export-extension",
-    "generate-icons": "node typescript/scripts/generate-icons.mjs",
-    "export-extension": "node typescript/scripts/export-extension.mjs",
-    "fetch-backgrounds": "node typescript/scripts/fetch-backgrounds.mjs"
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "export-extension": "node scripts/export-extension.mjs",
+    "fetch-backgrounds": "node scripts/fetch-backgrounds.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

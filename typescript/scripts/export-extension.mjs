@@ -31,12 +31,12 @@ function runCommand(command, args, { repoRoot, description, env = {} }) {
 }
 
 function ensureStaticExport({ repoRoot, exportDir }) {
+  const typescriptDir = path.join(repoRoot, 'typescript');
   const candidateDirs = Array.from(
     new Set([
       exportDir,
-      path.join(repoRoot, 'out'),
-      path.join(repoRoot, '.next'),
-      path.join(repoRoot, 'typescript', '.next'),
+      path.join(typescriptDir, 'out'),
+      path.join(typescriptDir, '.next'),
     ]),
   );
 
@@ -45,7 +45,7 @@ function ensureStaticExport({ repoRoot, exportDir }) {
 
   if (shouldRebuild) {
     runCommand('pnpm', ['exec', 'next', 'build', '--webpack'], {
-      repoRoot,
+      repoRoot: typescriptDir,
       description: 'next build',
     });
   }

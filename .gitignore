@@ -3,11 +3,13 @@
 .env.local
 
 node_modules/*
+typescript/node_modules/*
 
 .claude/settings.local.json
 dist/
 .next/
 typescript/.next/
+typescript/out/
 playwright-report/
 test-results/
 

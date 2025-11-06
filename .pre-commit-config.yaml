@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: typescript-checks
         name: TypeScript checks (tsc, eslint, prettier)
-        entry: node typescript/scripts/tscheck.js
+        entry: bash -c 'cd typescript && node scripts/tscheck.js "$@"' --
         language: system
         files: .*\.(ts|tsx|js|jsx)$
         exclude: (\.next|node_modules)/.*
