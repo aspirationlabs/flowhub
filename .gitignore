@@ -8,6 +8,7 @@ node_modules/
 dist/
 .next/
 typescript/.next/
+typescript/out/
 typescript/dist/
 typescript/node_modules/
 playwright-report/
