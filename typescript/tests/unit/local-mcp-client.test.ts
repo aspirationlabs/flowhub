@@ -69,6 +69,7 @@ describe('LocalMCPClient', () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Accept: 'application/json, text/event-stream',
           },
           body: expect.stringContaining('"method":"test_method"'),
         }),
