@@ -5,9 +5,11 @@ import {
   getConnectedCount,
   clearAllConnections,
 } from '../../../storage/connectors/userConnections';
-import type { ConnectorState } from '../../../types/connectors';
+import type { ConnectorState, ConnectorId } from '../../../types/connectors';
 
 describe('userConnections', () => {
+  const testConnectorId: ConnectorId = 'test';
+
   beforeEach(() => {
     localStorage.clear();
   });
@@ -15,7 +17,7 @@ describe('userConnections', () => {
   describe('setConnectorState', () => {
     it('should store connector state', () => {
       const state: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       };
@@ -23,41 +25,41 @@ describe('userConnections', () => {
       setConnectorState(state);
       const allStates = getAllConnectorStates();
 
-      expect(allStates['example']).toEqual(state);
+      expect(allStates['test']).toEqual(state);
     });
 
     it('should update existing connector state', () => {
       const state1: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'disconnected',
       };
       setConnectorState(state1);
 
       const state2: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       };
       setConnectorState(state2);
 
       const allStates = getAllConnectorStates();
-      expect(allStates['example']).toEqual(state2);
+      expect(allStates['test']).toEqual(state2);
     });
   });
 
   describe('removeConnectorState', () => {
     it('should remove connector state', () => {
       const state: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       };
 
       setConnectorState(state);
-      expect(getAllConnectorStates()['example']).toEqual(state);
+      expect(getAllConnectorStates()['test']).toEqual(state);
 
-      removeConnectorState('example');
-      expect(getAllConnectorStates()['example']).toBeUndefined();
+      removeConnectorState(testConnectorId);
+      expect(getAllConnectorStates()['test']).toBeUndefined();
     });
 
     it('should not throw when removing non-existent connector', () => {
@@ -73,7 +75,7 @@ describe('userConnections', () => {
 
     it('should return all connector states', () => {
       const state1: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       };
@@ -87,7 +89,7 @@ describe('userConnections', () => {
 
       const states = getAllConnectorStates();
       expect(states).toEqual({
-        example: state1,
+        test: state1,
         claudecode: state2,
       });
     });
@@ -100,7 +102,7 @@ describe('userConnections', () => {
 
     it('should count only connected connectors', () => {
       setConnectorState({
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       });
@@ -116,7 +118,7 @@ describe('userConnections', () => {
   describe('clearAllConnections', () => {
     it('should remove all connector states', () => {
       setConnectorState({
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: Date.now(),
       });
@@ -138,7 +140,7 @@ describe('userConnections', () => {
   describe('localStorage persistence', () => {
     it('should persist data across function calls', () => {
       const state: ConnectorState = {
-        id: 'example',
+        id: testConnectorId,
         status: 'connected',
         connectedAt: 12345,
       };
@@ -149,7 +151,7 @@ describe('userConnections', () => {
       expect(rawData).toBeTruthy();
 
       const parsed = JSON.parse(rawData!);
-      expect(parsed.connections.example).toEqual(state);
+      expect(parsed.connections.test).toEqual(state);
     });
   });
 });

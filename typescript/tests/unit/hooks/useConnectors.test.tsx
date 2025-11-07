@@ -2,8 +2,11 @@ import { renderHook, act } from '@testing-library/react';
 import { useConnectors } from '../../../hooks/useConnectors';
 import { connectorsStore } from '../../../state/connectors-store';
 import { clearAllConnections } from '../../../storage/connectors/userConnections';
+import type { ConnectorId } from '../../../types/connectors';
 
 describe('useConnectors', () => {
+  const testConnectorId: ConnectorId = 'test';
+
   beforeEach(() => {
     clearAllConnections();
   });
@@ -21,39 +24,39 @@ describe('useConnectors', () => {
   it('should update when connector state changes', () => {
     const { result } = renderHook(() => useConnectors());
 
-    expect(result.current.isConnectorConnected('example')).toBe(false);
+    expect(result.current.isConnectorConnected(testConnectorId)).toBe(false);
 
     act(() => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
     });
 
-    expect(result.current.isConnectorConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected(testConnectorId)).toBe(true);
   });
 
   it('should provide connect function', () => {
     const { result } = renderHook(() => useConnectors());
 
     act(() => {
-      result.current.connect('example');
+      result.current.connect(testConnectorId);
     });
 
-    expect(result.current.isConnectorConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected(testConnectorId)).toBe(true);
   });
 
   it('should provide disconnect function', () => {
     const { result } = renderHook(() => useConnectors());
 
     act(() => {
-      result.current.connect('example');
+      result.current.connect(testConnectorId);
     });
 
-    expect(result.current.isConnectorConnected('example')).toBe(true);
+    expect(result.current.isConnectorConnected(testConnectorId)).toBe(true);
 
     act(() => {
-      result.current.disconnect('example');
+      result.current.disconnect(testConnectorId);
     });
 
-    expect(result.current.isConnectorConnected('example')).toBe(false);
+    expect(result.current.isConnectorConnected(testConnectorId)).toBe(false);
   });
 
   it('should return all available connectors', () => {

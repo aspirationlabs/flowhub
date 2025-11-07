@@ -1,7 +1,6 @@
 'use client';
 
 import { useConnectors } from '../../../hooks/useConnectors';
-import { ExampleDetailWidget } from './connectors/ExampleDetailWidget';
 import { ClaudeCodeAnalyticsWidget } from './connectors/ClaudeCodeAnalyticsWidget';
 
 export function DetailedAnalytics() {
@@ -23,7 +22,6 @@ export function DetailedAnalytics() {
           {connectedConnectors.map((connector) => (
             <div key={connector.id}>
               {connector.id === 'claudecode' && <ClaudeCodeAnalyticsWidget />}
-              {connector.id === 'example' && <ExampleDetailWidget />}
             </div>
           ))}
         </div>

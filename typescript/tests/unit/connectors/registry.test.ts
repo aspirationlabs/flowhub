@@ -7,10 +7,10 @@ describe('Connector Registry', () => {
       expect(Array.isArray(result)).toBe(true);
     });
 
-    it('should include the example connector', () => {
+    it('should include the claudecode connector', () => {
       const result = getAllConnectors();
       expect(result.length).toBeGreaterThanOrEqual(1);
-      expect(result.some((c) => c.id === 'example')).toBe(true);
+      expect(result.some((c) => c.id === 'claudecode')).toBe(true);
     });
 
     it('should return connectors with required properties', () => {
