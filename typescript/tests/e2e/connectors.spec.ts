@@ -21,23 +21,26 @@ test.describe('Connectors E2E', () => {
     const heading = page.getByRole('heading', { name: /connectors/i });
     await expect(heading).toBeVisible();
 
-    const exampleConnector = page.getByRole('heading', { name: 'Example' });
-    await expect(exampleConnector).toBeVisible();
+    const claudecodeConnector = page.getByRole('heading', { name: 'Claude Code' });
+    await expect(claudecodeConnector).toBeVisible();
   });
 
-  test('should connect to Example connector without API key', async ({ page }) => {
+  test('should connect to Claude Code connector with API key', async ({ page }) => {
     await loadPage(page);
 
     const settingsButton = page.getByRole('button', { name: /settings/i });
     await settingsButton.click();
 
-    const connectButton = page.getByRole('button', { name: /connect example/i });
+    const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await expect(connectButton).toBeVisible();
 
     await connectButton.click();
 
-    const modalHeading = page.getByRole('heading', { name: /configure example/i });
+    const modalHeading = page.getByRole('heading', { name: /configure claude code/i });
     await expect(modalHeading).toBeVisible();
+
+    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
+    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await expect(modalConnectButton).toBeVisible();
@@ -52,7 +55,7 @@ test.describe('Connectors E2E', () => {
     await expect(connectedBadge).toBeVisible();
 
     // Verify plug button appears for connected connector
-    const plugButton = page.getByRole('button', { name: /disconnect example/i });
+    const plugButton = page.getByRole('button', { name: /disconnect claude code/i });
     await expect(plugButton).toBeVisible();
   });
 
@@ -62,13 +65,16 @@ test.describe('Connectors E2E', () => {
     const settingsButton = page.getByRole('button', { name: /settings/i });
     await settingsButton.click();
 
-    const connectButton = page.getByRole('button', { name: /connect example/i });
+    const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
+
+    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
+    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
 
-    const plugButton = page.getByRole('button', { name: /disconnect example/i });
+    const plugButton = page.getByRole('button', { name: /disconnect claude code/i });
     await expect(plugButton).toBeVisible();
   });
 
@@ -78,11 +84,14 @@ test.describe('Connectors E2E', () => {
     const settingsButton = page.getByRole('button', { name: /settings/i });
     await settingsButton.click();
 
-    const connectButton = page.getByRole('button', { name: /connect example/i });
+    const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
 
-    const modalHeading = page.getByRole('heading', { name: /configure example/i });
+    const modalHeading = page.getByRole('heading', { name: /configure claude code/i });
     await expect(modalHeading).toBeVisible();
+
+    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
+    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
@@ -90,11 +99,13 @@ test.describe('Connectors E2E', () => {
     // Wait for connect modal to close
     await expect(modalHeading).not.toBeVisible();
 
-    const plugButton = page.getByRole('button', { name: /disconnect example/i });
+    const plugButton = page.getByRole('button', { name: /disconnect claude code/i });
     await expect(plugButton).toBeVisible();
     await plugButton.click();
 
-    const disconnectHeading = page.getByRole('heading', { name: /disconnect example/i });
+    const disconnectHeading = page.getByRole('heading', {
+      name: /disconnect claude code/i,
+    });
     await expect(disconnectHeading).toBeVisible();
 
     const disconnectButton = page.getByRole('button', { name: /^disconnect$/i });
@@ -112,7 +123,7 @@ test.describe('Connectors E2E', () => {
     await expect(connectedBadge).not.toBeVisible();
 
     // Verify Connect button reappears
-    const newConnectButton = page.getByRole('button', { name: /connect example/i });
+    const newConnectButton = page.getByRole('button', { name: /connect claude code/i });
     await expect(newConnectButton).toBeVisible();
   });
 
@@ -148,13 +159,16 @@ test.describe('Connectors E2E', () => {
     const settingsButton = page.getByRole('button', { name: /settings/i });
     await settingsButton.click();
 
-    const connectButton = page.getByRole('button', { name: /connect example/i });
+    const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
+
+    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
+    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
 
-    const plugButton = page.getByRole('button', { name: /disconnect example/i });
+    const plugButton = page.getByRole('button', { name: /disconnect claude code/i });
     await expect(plugButton).toBeVisible();
 
     await page.reload({ waitUntil: 'domcontentloaded' });
@@ -162,7 +176,9 @@ test.describe('Connectors E2E', () => {
 
     await settingsButton.click();
 
-    const reloadedPlugButton = page.getByRole('button', { name: /disconnect example/i });
+    const reloadedPlugButton = page.getByRole('button', {
+      name: /disconnect claude code/i,
+    });
     await expect(reloadedPlugButton).toBeVisible();
 
     const connectedBadge = page.getByText('Connected');
@@ -178,8 +194,11 @@ test.describe('Connectors E2E', () => {
 
     await settingsButton.click();
 
-    const connectButton = page.getByRole('button', { name: /connect example/i });
+    const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
+
+    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
+    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();

@@ -1,7 +1,10 @@
 import { connectorsStore } from '../../../state/connectors-store';
 import { clearAllConnections } from '../../../storage/connectors/userConnections';
+import type { ConnectorId } from '../../../types/connectors';
 
 describe('ConnectorsStore', () => {
+  const testConnectorId: ConnectorId = 'test';
+
   beforeEach(() => {
     clearAllConnections();
   });
@@ -11,19 +14,19 @@ describe('ConnectorsStore', () => {
       const listener = jest.fn();
       const unsubscribe = connectorsStore.subscribe(listener);
 
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       expect(listener).toHaveBeenCalled();
       unsubscribe();
     });
 
     it('should notify subscribers when disconnecting', () => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       const listener = jest.fn();
       const unsubscribe = connectorsStore.subscribe(listener);
 
-      connectorsStore.disconnect('example');
+      connectorsStore.disconnect(testConnectorId);
 
       expect(listener).toHaveBeenCalled();
       unsubscribe();
@@ -36,7 +39,7 @@ describe('ConnectorsStore', () => {
       unsubscribe();
       listener.mockClear();
 
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       expect(listener).not.toHaveBeenCalled();
     });
@@ -44,12 +47,12 @@ describe('ConnectorsStore', () => {
 
   describe('connect', () => {
     it('should connect a connector without API key', () => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       const snapshot = connectorsStore.getSnapshot();
-      expect(snapshot.example).toBeDefined();
-      expect(snapshot.example?.status).toBe('connected');
-      expect(snapshot.example?.id).toBe('example');
+      expect(snapshot.test).toBeDefined();
+      expect(snapshot.test?.status).toBe('connected');
+      expect(snapshot.test?.id).toBe('test');
     });
 
     it('should connect a connector with API key', () => {
@@ -63,22 +66,22 @@ describe('ConnectorsStore', () => {
 
     it('should set connectedAt timestamp', () => {
       const before = Date.now();
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
       const after = Date.now();
 
       const snapshot = connectorsStore.getSnapshot();
-      expect(snapshot.example?.connectedAt).toBeGreaterThanOrEqual(before);
-      expect(snapshot.example?.connectedAt).toBeLessThanOrEqual(after);
+      expect(snapshot.test?.connectedAt).toBeGreaterThanOrEqual(before);
+      expect(snapshot.test?.connectedAt).toBeLessThanOrEqual(after);
     });
   });
 
   describe('disconnect', () => {
     it('should disconnect a connected connector', () => {
-      connectorsStore.connect('example');
-      expect(connectorsStore.getSnapshot().example).toBeDefined();
+      connectorsStore.connect(testConnectorId);
+      expect(connectorsStore.getSnapshot().test).toBeDefined();
 
-      connectorsStore.disconnect('example');
-      expect(connectorsStore.getSnapshot().example).toBeUndefined();
+      connectorsStore.disconnect(testConnectorId);
+      expect(connectorsStore.getSnapshot().test).toBeUndefined();
     });
 
     it('should not throw when disconnecting non-existent connector', () => {
@@ -88,17 +91,17 @@ describe('ConnectorsStore', () => {
 
   describe('getSnapshot', () => {
     it('should return current state of all connectors', () => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
       connectorsStore.connect('claudecode', 'key1');
 
       const snapshot = connectorsStore.getSnapshot();
 
-      expect(Object.keys(snapshot)).toContain('example');
+      expect(Object.keys(snapshot)).toContain('test');
       expect(Object.keys(snapshot)).toContain('claudecode');
     });
 
     it('should return stable reference when data unchanged', () => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       const snapshot1 = connectorsStore.getSnapshot();
       const snapshot2 = connectorsStore.getSnapshot();
@@ -109,7 +112,7 @@ describe('ConnectorsStore', () => {
     it('should return new reference after connect', () => {
       const snapshot1 = connectorsStore.getSnapshot();
 
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       const snapshot2 = connectorsStore.getSnapshot();
 
@@ -117,10 +120,10 @@ describe('ConnectorsStore', () => {
     });
 
     it('should return new reference after disconnect', () => {
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
       const snapshot1 = connectorsStore.getSnapshot();
 
-      connectorsStore.disconnect('example');
+      connectorsStore.disconnect(testConnectorId);
 
       const snapshot2 = connectorsStore.getSnapshot();
 
@@ -140,7 +143,7 @@ describe('ConnectorsStore', () => {
       listener2.mockClear();
       listener3.mockClear();
 
-      connectorsStore.connect('example');
+      connectorsStore.connect(testConnectorId);
 
       expect(listener1).toHaveBeenCalledTimes(1);
       expect(listener2).toHaveBeenCalledTimes(1);

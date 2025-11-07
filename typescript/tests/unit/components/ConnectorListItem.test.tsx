@@ -8,8 +8,8 @@ function createConnector(
   overrides: Partial<ConnectorDescriptor> = {},
 ): ConnectorDescriptor {
   return {
-    id: 'example',
-    displayName: 'Example',
+    id: 'test',
+    displayName: 'Test',
     description: 'Test connector',
     setupInstructions: 'instructions/test.md',
     requiresApiKey: true,
@@ -34,10 +34,10 @@ describe('ConnectorListItem', () => {
       />,
     );
 
-    const connectButton = screen.getByRole('button', { name: /connect example/i });
+    const connectButton = screen.getByRole('button', { name: /connect test/i });
     fireEvent.click(connectButton);
 
-    const apiKeyInput = await screen.findByLabelText(/example admin api key/i);
+    const apiKeyInput = await screen.findByLabelText(/test admin api key/i);
     fireEvent.change(apiKeyInput, { target: { value: 'sk-test-123' } });
 
     const confirmConnect = await screen.findByRole('button', { name: /^connect$/i });
@@ -60,7 +60,7 @@ describe('ConnectorListItem', () => {
       />,
     );
 
-    const connectButton = screen.getByRole('button', { name: /connect example/i });
+    const connectButton = screen.getByRole('button', { name: /connect test/i });
     fireEvent.click(connectButton);
 
     const confirmConnect = await screen.findByRole('button', { name: /^connect$/i });
@@ -83,7 +83,7 @@ describe('ConnectorListItem', () => {
       />,
     );
 
-    const plugButton = screen.getByRole('button', { name: /disconnect example/i });
+    const plugButton = screen.getByRole('button', { name: /disconnect test/i });
     expect(plugButton).toBeInTheDocument();
   });
 
@@ -100,13 +100,11 @@ describe('ConnectorListItem', () => {
       />,
     );
 
-    const plugButton = screen.getByRole('button', { name: /disconnect example/i });
+    const plugButton = screen.getByRole('button', { name: /disconnect test/i });
     fireEvent.click(plugButton);
 
     expect(onDisconnect).not.toHaveBeenCalled();
-    expect(
-      screen.getByRole('heading', { name: /disconnect example/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /disconnect test/i })).toBeInTheDocument();
 
     const confirmButton = screen.getByRole('button', { name: /^disconnect$/i });
     fireEvent.click(confirmButton);

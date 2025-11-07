@@ -1,6 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 
-export type ConnectorId = 'example' | 'claudecode';
+export type ConnectorId = 'claudecode' | 'test';
 
 export type MetricKind = 'cost' | 'count';
 
