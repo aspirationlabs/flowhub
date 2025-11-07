@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Visualize your flow state to crush your aspirations.",
   "permissions": ["storage"],
+  "host_permissions": ["http://localhost/*"],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
