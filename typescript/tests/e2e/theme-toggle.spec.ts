@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { LocalStorageKey } from '@/storage/local/keys';
+import { LocalStorageKey } from 'storage/local/keys';
 
 test.describe.configure({ mode: 'serial' });
 

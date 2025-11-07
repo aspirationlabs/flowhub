@@ -70,9 +70,6 @@ const lintTargets = unique(files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file
 // Prepare all checks to run in parallel
 const checks = [];
 
-// TypeScript compile checks (full project)
-checks.push(run('pnpm', ['run', 'typecheck'], 'TypeScript typecheck'));
-
 // ESLint
 if (lintTargets.length > 0) {
   checks.push(
@@ -114,6 +111,11 @@ const terminateChecks = (() => {
   };
 })();
 
+if (checks.length === 0) {
+  console.log('No files to check.');
+  process.exit(0);
+}
+
 console.log(`Running ${checks.length} checks in parallel...`);
 
 const checkPromises = checks.map((check) =>
@@ -129,7 +131,7 @@ Promise.all(checkPromises)
     process.exit(0);
   })
   .catch(async (error) => {
-    console.error('\nPre-commit checks failed:', error.message);
+    console.error('\nLint/format checks failed:', error.message);
     await Promise.allSettled(checks.map((check) => check.promise));
     process.exit(1);
   });

@@ -3,7 +3,7 @@ import {
   DailyResponseSchema,
   TotalUsageSchema,
   ModelBreakdownSchema,
-} from '../../../../connectors/claudecode/schema';
+} from 'connectors/claudecode/schema';
 
 describe('Claude Code Schemas', () => {
   describe('ModelBreakdownSchema', () => {

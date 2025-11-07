@@ -2,14 +2,23 @@
 .env
 .env.local
 
-node_modules/*
+node_modules/
 
 .claude/settings.local.json
 dist/
 .next/
 typescript/.next/
+typescript/out/
+typescript/dist/
+typescript/node_modules/
 playwright-report/
 test-results/
 
 *.tsbuildinfo
 debug-page.png
+
+# Linting and formatting caches
+.eslintcache
+typescript/.eslintcache
+node_modules/.cache/
+typescript/node_modules/.cache/

@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Bot } from 'lucide-react';
-import type { ConnectorDescriptor } from '@/types/connectors';
-import { ConnectorListItem } from '@/app/components/connectors/ConnectorListItem';
+import type { ConnectorDescriptor } from 'types/connectors';
+import { ConnectorListItem } from 'app/components/connectors/ConnectorListItem';
 
 function createConnector(
   overrides: Partial<ConnectorDescriptor> = {},
