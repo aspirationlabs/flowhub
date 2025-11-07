@@ -2,7 +2,12 @@
 
 import { spawn } from 'node:child_process';
 
-const files = process.argv.slice(2);
+const rawFiles = process.argv.slice(2);
+
+// Strip 'typescript/' prefix from file paths since we're running from within typescript/
+const files = rawFiles.map((file) => {
+  return file.startsWith('typescript/') ? file.slice('typescript/'.length) : file;
+});
 
 const run = (command, args, label) => {
   const controller = {
@@ -44,7 +49,7 @@ const run = (command, args, label) => {
         }
 
         console.error(
-          `${label} exited with code ${code}${signal ? ` (signal: ${signal})` : ''}`
+          `${label} exited with code ${code}${signal ? ` (signal: ${signal})` : ''}`,
         );
         const exitDetail = signal ? `signal ${signal}` : `exit code ${code}`;
         reject(new Error(`${label} failed with ${exitDetail}`));
@@ -70,14 +75,22 @@ checks.push(run('pnpm', ['run', 'typecheck'], 'TypeScript typecheck'));
 
 // ESLint
 if (lintTargets.length > 0) {
-  checks.push(run('pnpm', ['exec', 'eslint', ...lintTargets, '--no-warn-ignored'], 'ESLint'));
+  checks.push(
+    run(
+      'pnpm',
+      ['exec', 'eslint', '--cache', ...lintTargets, '--no-warn-ignored'],
+      'ESLint',
+    ),
+  );
 } else {
   console.log('No files to lint.');
 }
 
 // Prettier
 if (files.length > 0) {
-  checks.push(run('pnpm', ['exec', 'prettier', '--check', ...unique(files), '--write'], 'Prettier'));
+  checks.push(
+    run('pnpm', ['exec', 'prettier', '--cache', '--write', ...unique(files)], 'Prettier'),
+  );
 } else {
   console.log('No files to format.');
 }
@@ -107,7 +120,7 @@ const checkPromises = checks.map((check) =>
   check.promise.catch((error) => {
     terminateChecks(check);
     throw error;
-  })
+  }),
 );
 
 Promise.all(checkPromises)

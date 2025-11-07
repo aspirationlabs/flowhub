@@ -40,7 +40,7 @@ export class MCPClient {
   private requestId = 0;
   private initialized = false;
 
-  constructor(baseUrl = 'http://localhost:8080') {
+  constructor(baseUrl = '/api/mcp') {
     this.baseUrl = baseUrl;
   }
 

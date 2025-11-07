@@ -14,7 +14,7 @@
   "ignorePatterns": ["node_modules/", "dist/", ".next/", "coverage/", "next-env.d.ts"],
   "overrides": [
     {
-      "files": ["typescript/tests/**/*.test.ts", "typescript/tests/**/*.test.tsx"],
+      "files": ["tests/**/*.test.ts", "tests/**/*.test.tsx"],
       "env": {
         "jest": true
       }

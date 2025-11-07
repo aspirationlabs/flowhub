@@ -1,12 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import type {
-  BackgroundImage,
-  BackgroundPreferences,
-} from '../../../../types/background';
+import type { BackgroundImage, BackgroundPreferences } from 'types/background';
 import {
   loadBackgroundPreferences,
   saveBackgroundPreferences,
-} from '../../../../storage/backgrounds/background-store';
+} from 'storage/backgrounds/background-store';
 
 interface UseBackgroundReturn {
   currentBackground: BackgroundImage | null;

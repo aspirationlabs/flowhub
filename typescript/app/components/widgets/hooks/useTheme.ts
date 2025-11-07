@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Theme } from '@/types/theme';
+import { Theme } from 'types/theme';
 import {
   loadSystemPreferences,
   saveSystemPreferences,
