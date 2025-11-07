@@ -39,9 +39,6 @@ test.describe('Connectors E2E', () => {
     const modalHeading = page.getByRole('heading', { name: /configure claude code/i });
     await expect(modalHeading).toBeVisible();
 
-    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
-    await apiKeyInput.fill('sk-test-api-key-123');
-
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await expect(modalConnectButton).toBeVisible();
     await expect(modalConnectButton).not.toBeDisabled();
@@ -68,9 +65,6 @@ test.describe('Connectors E2E', () => {
     const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
 
-    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
-    await apiKeyInput.fill('sk-test-api-key-123');
-
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
 
@@ -89,9 +83,6 @@ test.describe('Connectors E2E', () => {
 
     const modalHeading = page.getByRole('heading', { name: /configure claude code/i });
     await expect(modalHeading).toBeVisible();
-
-    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
-    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
@@ -162,9 +153,6 @@ test.describe('Connectors E2E', () => {
     const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
 
-    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
-    await apiKeyInput.fill('sk-test-api-key-123');
-
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
 
@@ -196,9 +184,6 @@ test.describe('Connectors E2E', () => {
 
     const connectButton = page.getByRole('button', { name: /connect claude code/i });
     await connectButton.click();
-
-    const apiKeyInput = page.getByLabel(/claude code admin api key/i);
-    await apiKeyInput.fill('sk-test-api-key-123');
 
     const modalConnectButton = page.getByRole('button', { name: /^connect$/i });
     await modalConnectButton.click();
