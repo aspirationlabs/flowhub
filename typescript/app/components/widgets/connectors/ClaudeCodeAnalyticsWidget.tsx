@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../../../components/ui/card';
-import { Button } from '../../../../components/ui/button';
-import { getAllConnectors } from '../../../../connectors/registry';
-import { connectorsStore } from '../../../../state/connectors-store';
-import { MCPClient } from '../../../../connectors/claudecode/mcp-client';
-import { DailyResponseSchema } from '../../../../connectors/claudecode/schema';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { Button } from 'components/ui/button';
+import { getAllConnectors } from 'connectors/registry';
+import { connectorsStore } from 'state/connectors-store';
+import { MCPClient } from 'connectors/claudecode/mcp-client';
+import { DailyResponseSchema } from 'connectors/claudecode/schema';
 import { z } from 'zod';
-import { createKeyValueStore } from '../../../../storage/local/keyValueStore';
-import { LocalStorageKey } from '../../../../storage/local/keys';
+import { createKeyValueStore } from 'storage/local/keyValueStore';
+import { LocalStorageKey } from 'storage/local/keys';
 
 export function ClaudeCodeAnalyticsWidget() {
   const [lastSynced, setLastSynced] = useState<string | null>(null);

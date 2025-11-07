@@ -36,7 +36,6 @@ function ensureStaticExport({ repoRoot, exportDir }) {
       exportDir,
       path.join(repoRoot, 'out'),
       path.join(repoRoot, '.next'),
-      path.join(repoRoot, 'typescript', '.next'),
     ]),
   );
 
@@ -62,7 +61,7 @@ function ensureStaticExport({ repoRoot, exportDir }) {
 }
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.join(scriptDir, '..', '..');
+const repoRoot = path.join(scriptDir, '..');
 
 function main() {
   const paths = getDefaultPaths(repoRoot);

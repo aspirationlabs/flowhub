@@ -1,10 +1,21 @@
 repos:
   - repo: local
     hooks:
-      - id: typescript-checks
-        name: TypeScript checks (tsc, eslint, prettier)
-        entry: node typescript/scripts/tscheck.js
+      # TypeScript typecheck - runs once per commit (not per file)
+      - id: typescript-typecheck
+        name: TypeScript typecheck
+        entry: pnpm --filter @flowhub/typescript run typecheck
         language: system
-        files: .*\.(ts|tsx|js|jsx)$
+        files: .*\.(ts|tsx)$
         exclude: (\.next|node_modules)/.*
+        pass_filenames: false
+
+      # ESLint and Prettier - run per file for caching benefits
+      - id: typescript-lint-format
+        name: ESLint and Prettier
+        entry: pnpm --filter @flowhub/typescript run lint-format
+        language: system
+        files: ^typescript/.*\.(ts|tsx|js|jsx)$
+        exclude: ^typescript/(\.next|out|node_modules|dist)/.*
         pass_filenames: true
+        require_serial: false

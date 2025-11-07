@@ -1,0 +1,9 @@
+1:"$Sreact.fragment"
+2:I[9912,[],"ViewportBoundary"]
+4:I[9912,[],"MetadataBoundary"]
+5:"$Sreact.suspense"
+7:I[3697,[],"IconMark"]
+:HL["/_next/static/css/f44e0cda0fed51bb.css","style"]
+0:{"buildId":"wiuhQArCqqCEd0WIPVKWs","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"head":["$","$1","h",{"children":[null,["$","$L2",null,{"children":"$@3"}],["$","div",null,{"hidden":true,"children":["$","$L4",null,{"children":["$","$5",null,{"name":"Next.Metadata","children":"$@6"}]}]}],null]}],"isHeadPartial":false,"staleTime":300}
+3:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+6:[["$","title","0",{"children":"New Tab"}],["$","meta","1",{"name":"description","content":"Visualize your flow state and achieve your aspirations."}],["$","link","2",{"rel":"icon","href":"/icon.png?c75203fe52cbf1c4","type":"image/png","sizes":"1024x1024"}],["$","$L7","3",{}]]

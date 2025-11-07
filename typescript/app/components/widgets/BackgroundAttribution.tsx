@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Image } from 'lucide-react';
-import { OverlayIconButton } from '@/components/ui/overlay-icon-button';
-import type { BackgroundImage } from '@/types/background';
+import { OverlayIconButton } from 'components/ui/overlay-icon-button';
+import type { BackgroundImage } from 'types/background';
 
 interface BackgroundAttributionProps {
   background: BackgroundImage | null;
