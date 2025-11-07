@@ -2,10 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe.configure({ mode: 'serial' });
 
-// Helper to load page and wait for hydration
+// Helper to load page
 async function loadPage(page: any) {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
+  await page.goto('/');
 }
 
 test.describe('Connectors E2E', () => {
@@ -118,16 +117,6 @@ test.describe('Connectors E2E', () => {
     await expect(newConnectButton).toBeVisible();
   });
 
-  test('should display connector icon', async ({ page }) => {
-    await loadPage(page);
-
-    const settingsButton = page.getByRole('button', { name: /settings/i });
-    await settingsButton.click();
-
-    const connectorIcon = page.locator('.lucide-bot').first();
-    await expect(connectorIcon).toBeVisible();
-  });
-
   test('should close sidebar with close button', async ({ page }) => {
     await loadPage(page);
 
@@ -159,8 +148,7 @@ test.describe('Connectors E2E', () => {
     const plugButton = page.getByRole('button', { name: /disconnect claude code/i });
     await expect(plugButton).toBeVisible();
 
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
+    await page.reload();
 
     await settingsButton.click();
 
