@@ -103,7 +103,7 @@ async function main() {
 
     console.log(`Successfully fetched ${backgrounds.length} backgrounds`);
 
-    const outputPath = join(__dirname, '..', '..', 'public', 'backgrounds.json');
+    const outputPath = join(__dirname, '..', 'public', 'backgrounds.json');
     const jsonContent = JSON.stringify(backgrounds, null, 2);
 
     writeFileSync(outputPath, jsonContent, 'utf-8');

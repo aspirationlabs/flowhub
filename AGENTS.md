@@ -99,8 +99,9 @@ flowhub/
 │     └─ export-extension.mjs
 ├─ python/
 │  └─ api/                         # Placeholder for future backend endpoints
-└─ (root configs: package.json, pnpm-lock.yaml, next.config.ts, tsconfig.json,
-   tailwind.config.ts, components.json, .eslintrc.json, .prettierrc, .env.example, README.md)
+└─ (root hosts docs, automation, and a thin pnpm proxy; all Next.js + pnpm configs
+   now live inside `./typescript` alongside its package.json, pnpm-lock.yaml, Next/Tailwind/
+   TS config, eslint config, .prettierrc, .env.example, and README.md)
 ```
 
 ## Key Modules & Responsibilities
@@ -128,7 +129,7 @@ flowhub/
 
 ## Tooling & Validation
 
-- **Package management:** pnpm with pinned version (`packageManager` field) and committed `pnpm-lock.yaml`.
+- **Package management:** pnpm with pinned version (`packageManager` field) and committed `typescript/pnpm-lock.yaml`. Run installs from `typescript/` (or via `pnpm run install:ts` at repo root).
 - **Static analysis:** ESLint (`pnpm lint`), Prettier, optional Stylelint if CSS emerges.
 - **Typing:** `pnpm typecheck` (strict TypeScript, `tsc --noEmit`).
 - **Testing:** Jest for unit/integration (`pnpm test`), Playwright reserved for `tests/e2e`.
@@ -137,17 +138,17 @@ flowhub/
   - `pnpm lint` → `eslint . --ext .ts,.tsx`
   - `pnpm format` → `prettier --write .`
 - **CI pipeline (GitHub Actions):**
-  1. `pnpm install --frozen-lockfile`
-  2. `pnpm lint`
-  3. `pnpm typecheck`
-  4. `pnpm test --coverage`
-  5. `pnpm build`
+  1. `pnpm -C typescript install --frozen-lockfile`
+  2. `pnpm -C typescript run lint`
+  3. `pnpm -C typescript run typecheck`
+  4. `pnpm -C typescript run test --coverage`
+  5. `pnpm -C typescript run build`
 - **Pre-commit workflow:** lint-staged (ESLint, Prettier, optional focused Jest runs). Commit hooks may be added later via preferred tooling (e.g., lefthook or npm scripts; `.husky/` intentionally omitted).
 
 ## Operational Playbooks
 
 - **Adding a connector:**
-  1. Run `pnpm ts-node typescript/scripts/generate-connector.ts <name>`.
+  1. Run `pnpm -C typescript ts-node scripts/generate-connector.ts <name>`.
   2. Implement `client.ts`, `schema.ts`, `transformers.ts`, and connector UI components.
   3. Register connector in `typescript/connectors/registry.ts` and `typescript/config/connectors.ts`.
   4. Update summary logic if new metrics should appear there.

@@ -133,22 +133,22 @@ function sanitizeDist(directory) {
   });
 }
 
-function getDefaultPaths(repoRoot) {
+function getDefaultPaths(projectRoot) {
   return {
-    exportDir: path.join(repoRoot, 'out'),
-    distDir: path.join(repoRoot, 'dist'),
-    assetsDir: path.join(repoRoot, 'typescript', 'assets', 'icons'),
-    manifestPath: path.join(repoRoot, 'typescript', 'manifest.json'),
+    exportDir: path.join(projectRoot, 'out'),
+    distDir: path.join(projectRoot, 'dist'),
+    assetsDir: path.join(projectRoot, 'assets', 'icons'),
+    manifestPath: path.join(projectRoot, 'manifest.json'),
   };
 }
 
-function resolveExportSource({ repoRoot, exportDir, runExport }) {
+function resolveExportSource({ projectRoot, exportDir, runExport }) {
   if (!runExport) {
     return { outputDir: exportDir };
   }
 
   const result = runExport({
-    repoRoot,
+    projectRoot,
     defaultExportDir: exportDir,
   });
 
@@ -173,7 +173,7 @@ function resolveExportSource({ repoRoot, exportDir, runExport }) {
 }
 
 function prepareExtensionBundle({
-  repoRoot,
+  projectRoot,
   exportDir,
   distDir,
   assetsDir,
@@ -181,7 +181,7 @@ function prepareExtensionBundle({
   runExport,
 }) {
   const { outputDir, cleanup } = resolveExportSource({
-    repoRoot,
+    projectRoot,
     exportDir,
     runExport,
   });

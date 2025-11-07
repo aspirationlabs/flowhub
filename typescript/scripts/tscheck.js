@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
 import { spawn } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.join(scriptDir, '..');
+const repoRoot = path.join(projectRoot, '..');
 const files = process.argv.slice(2);
+
+const resolvePaths = (paths) => paths.map((filePath) => path.resolve(repoRoot, filePath));
 
 const run = (command, args, label) => {
   const controller = {
@@ -20,7 +27,7 @@ const run = (command, args, label) => {
 
   controller.promise = new Promise((resolve, reject) => {
     console.log(`Starting: ${label}`);
-    const child = spawn(command, args, { stdio: 'inherit' });
+    const child = spawn(command, args, { stdio: 'inherit', cwd: projectRoot });
     controller.child = child;
 
     const cleanup = () => {
@@ -44,7 +51,7 @@ const run = (command, args, label) => {
         }
 
         console.error(
-          `${label} exited with code ${code}${signal ? ` (signal: ${signal})` : ''}`
+          `${label} exited with code ${code}${signal ? ` (signal: ${signal})` : ''}`,
         );
         const exitDetail = signal ? `signal ${signal}` : `exit code ${code}`;
         reject(new Error(`${label} failed with ${exitDetail}`));
@@ -60,7 +67,10 @@ const run = (command, args, label) => {
 };
 
 const unique = (list) => Array.from(new Set(list));
-const lintTargets = unique(files.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file)));
+const absoluteFiles = resolvePaths(files);
+const lintTargets = unique(
+  absoluteFiles.filter((file) => /\.(ts|tsx|js|jsx)$/.test(file)),
+);
 
 // Prepare all checks to run in parallel
 const checks = [];
@@ -70,14 +80,22 @@ checks.push(run('pnpm', ['run', 'typecheck'], 'TypeScript typecheck'));
 
 // ESLint
 if (lintTargets.length > 0) {
-  checks.push(run('pnpm', ['exec', 'eslint', ...lintTargets, '--no-warn-ignored'], 'ESLint'));
+  checks.push(
+    run('pnpm', ['exec', 'eslint', ...lintTargets, '--no-warn-ignored'], 'ESLint'),
+  );
 } else {
   console.log('No files to lint.');
 }
 
 // Prettier
-if (files.length > 0) {
-  checks.push(run('pnpm', ['exec', 'prettier', '--check', ...unique(files), '--write'], 'Prettier'));
+if (absoluteFiles.length > 0) {
+  checks.push(
+    run(
+      'pnpm',
+      ['exec', 'prettier', '--check', ...unique(absoluteFiles), '--write'],
+      'Prettier',
+    ),
+  );
 } else {
   console.log('No files to format.');
 }
@@ -107,7 +125,7 @@ const checkPromises = checks.map((check) =>
   check.promise.catch((error) => {
     terminateChecks(check);
     throw error;
-  })
+  }),
 );
 
 Promise.all(checkPromises)

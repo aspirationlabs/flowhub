@@ -6,15 +6,11 @@ import { spawnSync } from 'node:child_process';
 
 import exportHelpers from './export-extension-lib.cjs';
 
-const {
-  getDefaultPaths,
-  prepareExtensionBundle,
-  ensureExists,
-} = exportHelpers;
+const { getDefaultPaths, prepareExtensionBundle, ensureExists } = exportHelpers;
 
-function runCommand(command, args, { repoRoot, description, env = {} }) {
+function runCommand(command, args, { projectRoot, description, env = {} }) {
   const result = spawnSync(command, args, {
-    cwd: repoRoot,
+    cwd: projectRoot,
     stdio: 'inherit',
     env: {
       ...process.env,
@@ -30,13 +26,12 @@ function runCommand(command, args, { repoRoot, description, env = {} }) {
   }
 }
 
-function ensureStaticExport({ repoRoot, exportDir }) {
+function ensureStaticExport({ projectRoot, exportDir }) {
   const candidateDirs = Array.from(
     new Set([
       exportDir,
-      path.join(repoRoot, 'out'),
-      path.join(repoRoot, '.next'),
-      path.join(repoRoot, 'typescript', '.next'),
+      path.join(projectRoot, 'out'),
+      path.join(projectRoot, '.next'),
     ]),
   );
 
@@ -45,7 +40,7 @@ function ensureStaticExport({ repoRoot, exportDir }) {
 
   if (shouldRebuild) {
     runCommand('pnpm', ['exec', 'next', 'build', '--webpack'], {
-      repoRoot,
+      projectRoot,
       description: 'next build',
     });
   }
@@ -62,15 +57,15 @@ function ensureStaticExport({ repoRoot, exportDir }) {
 }
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.join(scriptDir, '..', '..');
+const projectRoot = path.join(scriptDir, '..');
 
 function main() {
-  const paths = getDefaultPaths(repoRoot);
+  const paths = getDefaultPaths(projectRoot);
   prepareExtensionBundle({
-    repoRoot,
+    projectRoot,
     ...paths,
     runExport: () =>
-      ensureStaticExport({ repoRoot, exportDir: paths.exportDir }),
+      ensureStaticExport({ projectRoot, exportDir: paths.exportDir }),
   });
 }
 
