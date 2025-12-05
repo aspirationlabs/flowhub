@@ -38,6 +38,7 @@ global.chrome = {
     },
   },
   runtime: {
+    id: undefined,
     lastError: undefined,
   },
 } as unknown as typeof chrome;

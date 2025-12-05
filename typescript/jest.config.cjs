@@ -9,6 +9,7 @@ module.exports = {
   clearMocks: true,
   silent: true,
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
+  modulePaths: ['<rootDir>'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^(\\.{1,2}/.*)\\.js$': '$1',

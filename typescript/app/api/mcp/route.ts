@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const MCP_SERVER_URL = process.env.MCP_SERVER_URL || 'http://localhost:8080';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Forward the request to the MCP server with proper headers
-    const response = await fetch('http://localhost:8080/', {
+    const response = await fetch(MCP_SERVER_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
