@@ -6,9 +6,6 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["typescript/*"]
-    },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -27,12 +24,10 @@
     ]
   },
   "include": [
-    "typescript/**/*.ts",
-    "typescript/**/*.tsx",
+    "./**/*.ts",
+    "./**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "typescript/.next/types/**/*.ts",
-    "typescript/.next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

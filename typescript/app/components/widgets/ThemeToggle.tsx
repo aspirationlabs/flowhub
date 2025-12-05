@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { Theme } from '@/types/theme';
-import { OverlayIconButton } from '@/components/ui/overlay-icon-button';
+import { Theme } from 'types/theme';
+import { OverlayIconButton } from 'components/ui/overlay-icon-button';
 
 interface ThemeToggleProps {
   theme: Theme;

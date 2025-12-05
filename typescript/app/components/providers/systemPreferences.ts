@@ -1,6 +1,6 @@
 'use client';
 
-import { Theme } from '@/types/theme';
+import { Theme } from 'types/theme';
 import { z } from 'zod';
 import { createKeyValueStore } from '../../../storage/local/keyValueStore';
 import type { StorageErrorPayload } from '../../../storage/local/adapter';

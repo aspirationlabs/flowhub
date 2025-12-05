@@ -137,8 +137,8 @@ function getDefaultPaths(repoRoot) {
   return {
     exportDir: path.join(repoRoot, 'out'),
     distDir: path.join(repoRoot, 'dist'),
-    assetsDir: path.join(repoRoot, 'typescript', 'assets', 'icons'),
-    manifestPath: path.join(repoRoot, 'typescript', 'manifest.json'),
+    assetsDir: path.join(repoRoot, 'assets', 'icons'),
+    manifestPath: path.join(repoRoot, 'manifest.json'),
   };
 }
 
